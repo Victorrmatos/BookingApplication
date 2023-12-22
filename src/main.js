@@ -9,6 +9,7 @@ import CalendarComponent from '@/components/CalendarComponent.vue';
 createApp(App)
 .use(router)
 .use(setupCalendar, {})
+
 .component('VCalendar', Calendar)
 .component('VDatePicker', DatePicker)
 .component('CalendarComponent', CalendarComponent)

@@ -1,81 +1,100 @@
-import { defineStore } from 'pinia'
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
-import { db } from '@/js/firebase'
+import { defineStore } from 'pinia';
+import {
+  collection,
+  onSnapshot,
+  doc,
+  setDoc,
+  deleteDoc,
+  updateDoc,
+  addDoc,
+  query,
+  orderBy,
+} from 'firebase/firestore';
+import { db } from '@/js/firebase';
+
+const servicesCollectionRef = collection(db, 'services');
+const servicesCollectionQuery = query(
+  servicesCollectionRef,
+  orderBy('date', 'desc')
+);
 
 export const useStoreServices = defineStore('storeServices', {
-    state: () => {
-        return { 
-            services: [
-                
-                
-            ]
-        }
-    },
-    actions: {
-        async getServices() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "services"));
-                const services = [];
-                
-                querySnapshot.forEach((doc) => {
-                    const serviceData = doc.data();
-                    services.push({
-                        id: doc.id,
-                        name: serviceData.name,
-                        price: serviceData.price,
-                        duration: serviceData.duration
-                    });
-                });
-                
-                // Update the state with the fetched services (an array)
-                this.services = services;
-                
-            } catch (error) {
-                console.error('Error fetching services:', error);
-            }
-        },
-        
-        
-        addService(newServiceName, newServicePrice, newServiceDuration) {
-            let currentDate = new Date().getTime(),
-            id = currentDate.toString()
-            
-            let service = {
-                id,
-                name: newServiceName,
-                price: newServicePrice,
-                duration: newServiceDuration
-            }
-            this.services.unshift(service)
+  state: () => {
+    return {
+      services: [],
+      servicesLoaded: false
+    };
+  }, // Add a comma here
 
-
-        },
-        deleteService(idToDelete) {
-            this.services = this.services.filter(service => service.id !== idToDelete )
-        },
-        updateService(id, name, price, duration){
-            let index = this.services.findIndex(service => { return service.id === id})
-            this.services[index].name = name
-            this.services[index].price = price
-            this.services[index].duration = duration
-        }
-    },
-    getters: {
+  actions: {
+    async getServices() {
+        this.servicesLoaded = false
+      onSnapshot(servicesCollectionQuery, (querySnapshot) => {
+        let services = [];
+        querySnapshot.forEach((doc) => {
+          let service = {
+            id: doc.id,
+            name: doc.data().name,
+            price: doc.data().price,
+            duration: doc.data().duration,
+            date: doc.data().date
+          };
+          services.push(service);
+        });
+       
+          this.services = services
+          this.servicesLoaded = true
         
-        getServiceName: (state) => {
-            return (id) => {
-                return state.services.filter(service => { return service.id === id })[0].name
-            }
-        },
-        getServicePrice: (state) => {
-            return (id) => {
-                return state.services.filter(service => { return service.id === id })[0].price
-            }
-        },
-        getServiceDuration: (state) => {
-            return (id) => {
-                return state.services.filter(service => { return service.id === id })[0].duration
-            }
-        }
-    }
-})
+      });
+      
+
+    },
+
+    async addService(newServiceName, newServicePrice, newServiceDuration) {
+      let currentDate = new Date().getTime();
+      let date = currentDate.toString();
+
+      await addDoc(servicesCollectionRef, {
+        name: newServiceName,
+        price: newServicePrice,
+        duration: newServiceDuration,
+        date,
+      });
+    },
+
+    async deleteService(idToDelete) {
+      await deleteDoc(doc(servicesCollectionRef, idToDelete));
+    },
+
+    async updateService(id, name, price, duration) {
+      await updateDoc(doc(servicesCollectionRef, id), {
+        name,
+        price,
+        duration,
+      });
+    },
+  },
+
+  getters: {
+    getServiceName: (state) => {
+      return (id) => {
+        const service = state.services.find((service) => service.id === id);
+        return service ? service.name : '';
+      };
+    },
+
+    getServicePrice: (state) => {
+      return (id) => {
+        const service = state.services.find((service) => service.id === id);
+        return service ? service.price : '';
+      };
+    },
+
+    getServiceDuration: (state) => {
+      return (id) => {
+        const service = state.services.find((service) => service.id === id);
+        return service ? service.duration : '';
+      };
+    },
+  },
+});

@@ -20,11 +20,18 @@
     </template>
 </AddEditService>
 
+<progress
+v-if="!storeServices.servicesLoaded"
+  class="progress is-large is-dark"
+  max="100"
+ />
+<template
+v-else
+>
 <div
 v-for="service in storeServices.services"
 :key="service.id"
 class="card mb-4"
-
 >
 <div class="card-content">
     <div class="content">
@@ -59,31 +66,24 @@ Delete
 </a>
 </footer>
 </div>
+</template>
+</div>
+<div class="ml-5" v-if="!storeServices.services.length">
+No services added.
 </div>
 </template>
 
+
 <script setup>
-
-/*
-imports
-*/
-
-import { ref } from 'vue'
-import Service from '@/components/Services/Service.vue'
-import AddEditService from '@/components/Services/AddEditService.vue'
+import { ref, computed } from 'vue'
 import { useStoreServices } from '@/stores/storeServices'
-import NavBar from '@/components/Layout/NavBar.vue'
+import { useDateFormat } from '@vueuse/core'
+import NavBar from '@/components/Layout/NavBar.vue';
+import AddEditService from '@/components/Services/AddEditService.vue';
 
-/*
-store
-*/
+
 
 const storeServices = useStoreServices()
-
-/*
-services
-*/
-
 const newServiceName = ref('')
 const newServicePrice = ref('')
 const newServiceDuration = ref('')
@@ -97,4 +97,15 @@ const addService = () => {
     addEditServiceRef.value.focusTextarea()
 }
 
-</script> 
+const props = defineProps({
+    service: {
+        type: Object
+    }
+})
+
+const dateFormatted = computed(() => {
+    let date = new Date(parseInt(props.service.date))
+    let dateFormatted = useDateFormat(date, 'DD-MM-YYYY')
+    return dateFormatted.value
+})
+</script>

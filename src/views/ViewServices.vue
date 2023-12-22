@@ -16,6 +16,12 @@
             
         </div>
         <div class="column">
+            <progress
+v-if="!storeServices.servicesLoaded"
+  class="progress is-large is-dark"
+  max="100"
+ />
+ <template v-else>
             <div class="services">
                 <RouterLink
                 to="/date">
@@ -42,7 +48,7 @@
             </div>
         </RouterLink>
     </div>
-    
+</template>
 </div>
 
 </div>
