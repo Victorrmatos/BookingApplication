@@ -1,6 +1,14 @@
 <template>
     <NavBar />
     <div class="container">
+        <progress
+v-if="!storeClients.clientsLoaded"
+  class="progress is-large is-dark"
+  max="100"
+ />
+<template
+v-else
+>
         <table class="table is-fullwidth is-striped">
             <thead>
                 <tr>
@@ -15,7 +23,7 @@
             </thead>
             <tbody>
                 <tr v-for="(client, clientId) in storeClients.clients" :key="clientId">
-                    <td>{{ clientId }}</td>
+                    <td>{{ client.id }}</td>
                     <td>{{ client.fName }}</td>
                     <td>{{ client.lName }}</td>
                     <td>{{ client.phone }}</td>
@@ -29,13 +37,14 @@
                                 <button class="button is-small is-info">Edit</button>
                             </div>
                             <div class="column">
-                                <button class="button is-small is-danger">Delete</button>
+                                <button class="button is-small is-danger"  @click="storeClients.deleteClient(client.id)">Delete</button>
                             </div>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+        </template>
     </div>
 </template>
 

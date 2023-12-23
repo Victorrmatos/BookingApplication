@@ -20,7 +20,7 @@ const clientsCollectionQuery = query(
     
     export const useStoreClients = defineStore('storeClients', {
         state: () => ({
-            clients: {},
+            clients: [],
             clientsLoaded: false
         }),
         
@@ -51,17 +51,18 @@ const clientsCollectionQuery = query(
             async addClient(newClientfName, newClientlName, newClientPhone, newClientEmail, newClientPreferences) {
                 let currentDate = new Date().getTime();
                 let date = currentDate.toString();
-          
-                await addDoc(clientsCollectionRef, {
-                  fName: newClientfName,
-                  lName: newClientlName,
-                  price: newClientlName,
-                  email: newClientEmail,
-                  phone: newClientPhone,
-                  preferences: newClientPreferences,
-                  date,
+            
+                const docRef = await addDoc(clientsCollectionRef, {
+                    fName: newClientfName,
+                    lName: newClientlName,
+                    email: newClientEmail,
+                    phone: newClientPhone,
+                    preferences: newClientPreferences,
+                    date,
                 });
-              },
+            
+                return docRef.id; // Return the ID of the newly added client
+            }  ,
           
               async deleteClient(idToDelete) {
                 await deleteDoc(doc(clientsCollectionRef, idToDelete));

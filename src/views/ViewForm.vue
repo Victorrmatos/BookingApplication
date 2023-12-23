@@ -87,24 +87,42 @@ const newClient = ref({
     email: '',
     preferences: ''
 })
+const submitForm = async () => {
+    let clientKey;
 
-const submitForm = () => {
-    // Check if a client with the same email exists
-    let existingClientKey = Object.keys(storeClients.clients).find(key => storeClients.clients[key].email === newClient.value.email)
-    
-    if (!existingClientKey) {
-        // Create a unique ID for the new client
-        existingClientKey = Date.now().toString() // or any other unique id generation logic
-        storeClients.addClient(newClient.value.fName, newClient.value.lName, newClient.value.phone, newClient.value.email, newClient.value.preferences)
+    // Find an existing client by email
+    const existingClient = storeClients.clients.find(client => 
+        client.email === newClient.value.email
+    );
+
+    if (existingClient) {
+        // Use the existing client's ID
+        clientKey = existingClient.id;
+    } else {
+        // Add a new client and get the ID
+        clientKey = await storeClients.addClient(
+            newClient.value.fName, newClient.value.lName, 
+            newClient.value.phone, newClient.value.email, 
+            newClient.value.preferences
+        );
     }
-    
-    // Update only the current booking's client information
-    const newBooking = storeBookings.newBooking
+
+    // Ensure we have a valid clientKey
+    if (!clientKey) {
+        console.error("Failed to obtain a valid client key");
+        return; // or handle the error as needed
+    }
+
+    // Update the booking's client information
+    const newBooking = storeBookings.newBooking;
     if (newBooking) {
-        newBooking.clientId = existingClientKey
-        newBooking.clientName = `${newClient.value.fName} ${newClient.value.lName}`
+        newBooking.clientId = clientKey;
+        newBooking.client = `${newClient.value.fName} ${newClient.value.lName}`;
     }
 }
+
+
+
 </script>
 
 <style>

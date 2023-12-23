@@ -21,7 +21,9 @@
       <div class="column is-half">
         <h2 class="title is-5 has-text-white">{{ state.date.toDateString() }}</h2>
         <div class="columns">
+          <!-- insert progress bar here -->
           <div class="column is-half mt-2">
+            
             <ul>
               <template v-for="(slot, index) in state.dateSlots" :key="index">
                 <a @click="selectedDateTime(slot, index)">
@@ -223,9 +225,7 @@
         
         selectedSlots.push(state.dateSlots[index + i]);
       }
-      console.log(formatDate(state.date))
       storeBookings.newBooking.date=formatDate(state.date)
-      console.log(selectedSlots)
       storeBookings.newBooking.slots=selectedSlots
       state.tempSelectedSlots=selectedSlots
   };

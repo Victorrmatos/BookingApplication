@@ -1,74 +1,83 @@
 <template>
-        <StepIndicator class="step-indicator" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-
-    <div class="confirmation has-text-white">
+    <div class="container">
+      <StepIndicator class="step-indicator" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
+      <div class="confirmation has-text-white">
         <h2 class="title has-text-white">Please confirm your booking details:</h2>
-        
         <div class="columns">
-            
-            <div class="column">
-                
-                <h3>Service booked:</h3>
-                <label>{{ storeBookings.newBooking.service }}</label>
-                
-                <h3>Booking date:</h3>
-                <label>{{ storeBookings.newBooking.date }}</label>
-                
-                <h3>Booking time:</h3>
-                <label>{{ storeBookings.newBooking.slots[0] }}</label>
-            </div>
-            <div class="column">
-                <h3>Name:</h3>
-            <label>{{ bookingClient.fName }} {{ bookingClient.lName }}</label>
-                
-                <h3>Email:</h3>
-                <label>{{ bookingClient.email }}</label>
-                
-                <h3>Phone:</h3>
-                <label>{{ bookingClient.phone }}</label>
-                
-                <h3>Preferences:</h3>
-                <label>{{ bookingClient.preferences }}</label>
-            </div>
+          <div class="column">
+            <h3>Service booked:</h3>
+            <label>{{ storeBookings.newBooking.service }}</label>
+            <h3>Booking date:</h3>
+            <label>{{ storeBookings.newBooking.date }}</label>
+            <h3>Booking time:</h3>
+            <label>{{ storeBookings.newBooking.slots?.[0] }}</label>
+          </div>
+          
+          <!-- Client Details Section -->
+          <div class="column">
+            <!-- Conditional Rendering -->
+            <template v-if="bookingClient">
+              <h3>Name:</h3>
+              <label>{{ bookingClient.fName }} {{ bookingClient.lName }}</label>
+              <h3>Email:</h3>
+              <label>{{ bookingClient.email }}</label>
+              <h3>Phone:</h3>
+              <label>{{ bookingClient.phone }}</label>
+              <h3>Preferences:</h3>
+              <label>{{ bookingClient.preferences }}</label>
+            </template>
+            <progress v-else class="progress is-large is-dark" max="100"></progress>
+          </div>
         </div>
+  
         <div class="control">
-            <button class="button" v-if="!bookingComplete" @click="confirmBooking()">Confirm Booking</button>
-            <h2 style="font-size:30px" v-if="bookingComplete">Thank you, {{ bookingClient.fName }}! Your appointment is confirmed!</h2>
+          <button class="button" v-if="!bookingComplete" @click="confirmBooking()">Confirm Booking</button>
+          <h2 style="font-size:30px" v-if="bookingComplete">Thank you, {{ bookingClient.fName }}! Your appointment is confirmed!</h2>
         </div>
+      </div>
     </div>
-</template>
-
+  </template>
+  
+  
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { watch, ref, onMounted } from 'vue';
 import { useStoreBookings } from '@/stores/storeBookings';
-import { useStoreClients } from '@/stores/storeClients'; 
-import { useStoreDateTime } from '@/stores/storeDateTime'; 
+import { useStoreClients } from '@/stores/storeClients';
+import { useStoreDateTime } from '@/stores/storeDateTime';
 import StepIndicator from '@/components/Layout/StepIndicator.vue';
 
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
-const storeDateTime = useStoreDateTime(); 
+const storeDateTime = useStoreDateTime();
 
 const newBookingId = ref('');
-const bookingClient = ref({});
+const bookingClient = ref(null); // Use null initially
 const bookingComplete = ref(false);
-
-/*
-step indicator
-*/
 const currentStep = ref(3);
 const maxStepReached = ref(3);
 
-const loadBooking = () => {
-  const bookingClientId = storeBookings.newBooking.clientId;
-  bookingClient.value = storeClients.clients[bookingClientId] || {};
-  newBookingId.value = Date.now().toString();
+
+const loadBooking = (clientId) => {
+  if (clientId) {
+    const client = storeClients.clients.find(c => c.id === clientId);
+    if (client) {
+        bookingClient.value = client;  // Directly assign the found client
+
+    } else {
+      console.error('Client not found for ID:', clientId);
+    }
+  }
 };
 
 onMounted(() => {
-  loadBooking();
+    loadBooking(storeBookings.newBooking.clientId)
+  });
+
+watch(() => storeBookings.newBooking.clientId, (newClientId) => {
+  loadBooking(newClientId);
 });
+
 
 const findDateIndex = (date) => {
   return storeDateTime.dates.findIndex(d => d.date === date);
@@ -128,10 +137,12 @@ const confirmBooking = () => {
         availableSlots: availableSlots,
         bookings: [newBookingId.value]
       };
-      storeDateTime.dates.push(newDate);
-    }
+      storeDateTime.dates.push(newDate);    
 
-    storeBookings.bookings[newBookingId.value] = storeBookings.newBooking;
+    }
+    
+    storeBookings.addBooking(storeBookings.newBooking.client, storeBookings.newBooking.clientId, storeBookings.newBooking.service, storeBookings.newBooking.slots, storeBookings.newBooking.date)
+    
     bookingComplete.value = true;
   } else {
     console.error('Invalid booking date:', bookingDate);
