@@ -5,26 +5,26 @@
         <div class="field">
             <label class="label has-text-white">First Name</label>
             <div class="control">
-                <input class="input" type="text" placeholder="Please enter your first name" v-model="client.fName">
+                <input class="input" type="text" placeholder="Please enter your first name" v-model="newClient.fName">
             </div>
         </div>
         <div class="field">
             <label class="label has-text-white">Last Name</label>
             <div class="control">
-                <input class="input" type="text" placeholder="Please enter your last name" v-model="client.lName">
+                <input class="input" type="text" placeholder="Please enter your last name" v-model="newClient.lName">
             </div>
         </div>
         <div class="field">
             <label class="label has-text-white">Phone</label>
             <div class="control">
-                <input class="input" type="text" placeholder="Please enter your phone number" v-model="client.phone">
+                <input class="input" type="text" placeholder="Please enter your phone number" v-model="newClient.phone">
             </div>
         </div>
         
         <div class="field">
             <label class="label has-text-white">Email</label>
             <div class="control has-icons-left has-icons-right">
-                <input class="input" type="email" placeholder="Your email" v-model="client.email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                <input class="input" type="email" placeholder="Your email" v-model="newClient.email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
                 <span class="icon is-small is-left">
                     <i class="fas fa-envelope"></i>
                 </span>
@@ -34,7 +34,7 @@
         <div class="field">
             <label class="label has-text-white">Preferences</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Textarea" v-model="client.preferences"></textarea>
+                <textarea class="textarea" placeholder="Textarea" v-model="newClient.preferences"></textarea>
             </div>
         </div>
         
@@ -80,7 +80,7 @@ const maxStepReached = ref(2)
 
 
 // Reactive properties for form inputs
-const client = ref({
+const newClient = ref({
     fName: '',
     lName: '',
     phone: '',
@@ -90,19 +90,19 @@ const client = ref({
 
 const submitForm = () => {
     // Check if a client with the same email exists
-    let existingClientKey = Object.keys(storeClients.clients).find(key => storeClients.clients[key].email === client.value.email)
+    let existingClientKey = Object.keys(storeClients.clients).find(key => storeClients.clients[key].email === newClient.value.email)
     
     if (!existingClientKey) {
         // Create a unique ID for the new client
         existingClientKey = Date.now().toString() // or any other unique id generation logic
-        storeClients.clients[existingClientKey] = { id: existingClientKey, ...client.value }
+        storeClients.addClient(newClient.value.fName, newClient.value.lName, newClient.value.phone, newClient.value.email, newClient.value.preferences)
     }
     
     // Update only the current booking's client information
     const newBooking = storeBookings.newBooking
     if (newBooking) {
         newBooking.clientId = existingClientKey
-        newBooking.clientName = `${client.value.fName} ${client.value.lName}`
+        newBooking.clientName = `${newClient.value.fName} ${newClient.value.lName}`
     }
 }
 </script>
