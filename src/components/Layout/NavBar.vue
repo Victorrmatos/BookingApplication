@@ -37,32 +37,9 @@
             active-class="is-active"
             @click.prevent="toggleMobileNav"
           >
-            Services
+            New Booking
           </RouterLink>
-          <RouterLink
-            to="/date"
-            class="navbar-item"
-            active-class="is-active"
-            @click.prevent="toggleMobileNav"
-          >
-            Date
-          </RouterLink>
-          <RouterLink
-            to="/form"
-            class="navbar-item"
-            active-class="is-active"
-            @click.prevent="toggleMobileNav"
-          >
-            Form
-          </RouterLink>
-          <RouterLink
-            to="/confirmation"
-            class="navbar-item"
-            active-class="is-active"
-            @click.prevent="toggleMobileNav"
-          >
-            Confirmation
-          </RouterLink>
+        
           <RouterLink
             to="/adminServices"
             class="navbar-item"

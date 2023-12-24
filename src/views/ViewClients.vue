@@ -1,6 +1,7 @@
 <template>
     <NavBar />
     <div class="container">
+        
         <progress
 v-if="!storeClients.clientsLoaded"
   class="progress is-large is-dark"
@@ -9,6 +10,7 @@ v-if="!storeClients.clientsLoaded"
 <template
 v-else
 >
+<div class="table-container">
         <table class="table is-fullwidth is-striped">
             <thead>
                 <tr>
@@ -23,27 +25,24 @@ v-else
             </thead>
             <tbody>
                 <tr v-for="(client, clientId) in storeClients.clients" :key="clientId">
-                    <td>{{ client.id }}</td>
-                    <td>{{ client.fName }}</td>
-                    <td>{{ client.lName }}</td>
-                    <td>{{ client.phone }}</td>
-                    <td>{{ client.email }}</td>
+                    <td class="scrollableId-cell">{{ client.id }}</td>
+                    <td class="scrollableName-cell">{{ client.fName }}</td>
+                    <td class="scrollableName-cell">{{ client.lName }}</td>
+                    <td class="scrollablePhone-cell">{{ client.phone }}</td>
+                    <td class="scrollableEmail-cell">{{ client.email }}</td>
                     <td>
-                        <div class="scrollable-cell">{{ client.preferences }}</div>
+                        <div class="scrollablePreferences-cell">{{ client.preferences }}</div>
                     </td>
                     <td>
-                        <div class="columns">
-                            <div class="column">
-                                <button class="button is-small is-info">Edit</button>
-                            </div>
-                            <div class="column">
-                                <button class="button is-small is-danger"  @click="storeClients.deleteClient(client.id)">Delete</button>
-                            </div>
-                        </div>
+                        <div class="buttons are-small has-addons is-centered">
+                    <button class="button is-small is-info compact-button">Edit</button>
+                    <button class="button is-small is-danger compact-button" @click="storeClients.deleteClient(client.id)">Delete</button>
+                </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+    </div>
         </template>
     </div>
 </template>
@@ -57,9 +56,33 @@ const storeClients = useStoreClients();
 </script>
 
 <style scoped>
-.scrollable-cell {
+
+</style>
+
+<style>
+
+.scrollableId-cell {
+    max-width: 5rem; 
+    overflow-x: auto;
+}
+.scrollableName-cell {
+    max-width: 10rem; 
+    overflow-x: auto;
+}.scrollablePhone-cell {
+    max-width: 5rem; 
+    overflow-x: auto;
+}
+.scrollableEmail-cell {
+    max-width: 10rem; 
+    overflow-x: auto;
+}
+
+
+.scrollablePreferences-cell {
+    max-width: 10rem;
     max-height: 50px; 
     overflow-y: auto;
     word-break: break-word;
 }
+
 </style>
