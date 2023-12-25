@@ -284,31 +284,41 @@ watch(selectedWeekday, () => {
 
 
 
-const saveChanges = () => {
-  let newAvailableSlots = [...tempActiveTimeSlots.value]
+const saveChanges = async () => {
+  const newAvailableSlots = [...tempActiveTimeSlots.value];
 
   if (lastSelected.value.type === 'calendar') {
-    // Handle saving for a specific calendar day
-    let selectedDateFormatted = formatDate(lastSelected.value.value);
-    let dateObjIndex = storeDateTime.dates.findIndex(d => d.date === selectedDateFormatted);
+    const selectedDateFormatted = formatDate(lastSelected.value.value);
+    const dateObjIndex = storeDateTime.dates.findIndex(d => d.date === selectedDateFormatted);
     if (dateObjIndex !== -1) {
-      let customDayId = storeDateTime.dates[dateObjIndex].id
-      let customDayDate = storeDateTime.dates[dateObjIndex].date
-
-      storeDateTime.updateCustomDay(customDayId, customDayDate, newAvailableSlots) 
+      const customDay = storeDateTime.dates[dateObjIndex];
+      try {
+        console.log(customDay.id, customDay.date, newAvailableSlots)
+        await storeDateTime.updateCustomDay(customDay.id, customDay.date, newAvailableSlots);
+      } catch (error) {
+        console.error('Error updating custom day:', error);
+      }
     } else {
-      storeDateTime.addCustomDay(selectedDateFormatted, newAvailableSlots)
-      
+      try {
+        const docRef = await storeDateTime.addCustomDay(selectedDateFormatted, newAvailableSlots);
+        const newDate = {
+          id: docRef,
+          date: selectedDateFormatted,
+          availableSlots: newAvailableSlots
+        };
+        storeDateTime.dates.push(newDate);
+      } catch (error) {
+        console.error('Error adding custom day:', error);
+      }
     }
   } else if (lastSelected.value.type === 'weekday') {
-    // Handle saving for a specific weekday
-
-    // storeDateTime.stdWeek[lastSelected.value.value] = [...tempActiveTimeSlots.value];
-   
-    storeDateTime.updateStdWeek(selectedWeekday.value, newAvailableSlots)
+    try {
+      await storeDateTime.updateStdWeek(selectedWeekday.value, newAvailableSlots);
+    } catch (error) {
+      console.error('Error updating standard week:', error);
+    }
   }
 };
-
 
 
 </script>

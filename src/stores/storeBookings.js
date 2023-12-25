@@ -1,33 +1,20 @@
 import { defineStore } from 'pinia';
-import {
-    collection,
-    onSnapshot,
-    doc,
-    setDoc,
-    deleteDoc,
-    updateDoc,
-    addDoc,
-    query,
-    orderBy,
-} from 'firebase/firestore';
+import { collection, onSnapshot, doc, deleteDoc, updateDoc, addDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '@/js/firebase';
 
 const bookingsCollectionRef = collection(db, 'bookings');
-const bookingsCollectionQuery = query(
-    bookingsCollectionRef,
-    orderBy('date', 'asc')
-    );
+const bookingsCollectionQuery = query(bookingsCollectionRef, orderBy('date', 'asc'));
 
 export const useStoreBookings = defineStore('storeBookings', {
     state: () => ({
-        bookings: {}, // Initialize bookings as an empty object
+        bookings: [], // Initialize bookings as an empty array
         newBooking: {},
         bookingsLoaded: false
     }),
     
     actions: {
         async getBookings() {
-            this.bookingsLoaded = false
+            this.bookingsLoaded = false;
             onSnapshot(bookingsCollectionQuery, (querySnapshot) => {
                 let bookings = [];
                 querySnapshot.forEach((doc) => {
@@ -42,34 +29,33 @@ export const useStoreBookings = defineStore('storeBookings', {
                     bookings.push(booking);
                 });
                 
-                this.bookings = bookings
-                this.bookingsLoaded = true
+                this.bookings = bookings;
+                this.bookingsLoaded = true;
             });
         },
         async addBooking(newBookingClient, newBookingClientId, newBookingService, newBookingSlots, newBookingDate) {
-            await addDoc(bookingsCollectionRef, {
+            const docRef = await addDoc(bookingsCollectionRef, {
               client: newBookingClient,
               clientId: newBookingClientId,
               service: newBookingService,
               slots: newBookingSlots,
               date: newBookingDate,
-        
             });
-          },
+            return docRef.id; // Return the new booking ID
+        },
       
-          async deleteBooking(idToDelete) {
+        async deleteBooking(idToDelete) {
             await deleteDoc(doc(bookingsCollectionRef, idToDelete));
-          },
+        },
       
-          async updateBooking(id, client, clientId, service, slots, date) {
+        async updateBooking(id, client, clientId, service, slots, date) {
             await updateDoc(doc(bookingsCollectionRef, id), {
-                id, 
                 client, 
                 clientId, 
                 service, 
                 slots, 
                 date
             });
-          },
         },
+    },
 });

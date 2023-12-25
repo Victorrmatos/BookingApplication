@@ -134,7 +134,7 @@
   const getWeeklySlots = (date) => {
     const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     const weekDay = weekdays[date.getDay()].toLowerCase();
-    return storeDateTime.stdWeek.Tz6MddPkSmX85V1rJcHR[weekDay] || [];
+    return storeDateTime.stdWeek[weekDay] || [];
   };
 
   onMounted(async () => {

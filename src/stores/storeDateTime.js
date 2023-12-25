@@ -6,6 +6,7 @@ import {
     setDoc,
     deleteDoc,
     updateDoc,
+    getDoc,
     addDoc,
     query,
     orderBy,
@@ -73,33 +74,73 @@ export const useStoreDateTime = defineStore('storeDateTime', {
                 this.dates = customDays;
             });
         },
-        async addCustomDay(newDate, newAvailableSlots) {
-            console.log(newDate, newAvailableSlots)
-            const docRef = await addDoc(customDaysCollectionRef, {    
+        async addCustomDay(newDate, newAvailableSlots, bookings =[]) {
+            try {
+              console.log('Adding custom day: bookings: ', bookings);
+              const docRef = await addDoc(customDaysCollectionRef, {
                 date: newDate,
                 availableSlots: newAvailableSlots,
-             
-            });
+                bookings: bookings
+              });
+              if (docRef.id) {
+                console.log('Custom day added with ID:', docRef.id);
+                return docRef.id;
+              } else {
+                console.error('Unable to obtain ID from docRef:', docRef);
+                throw new Error('Unable to obtain ID from docRef');
+              }
+            } catch (error) {
+              console.error('Error adding custom day:', error);
+              throw error; // Rethrow the error to handle it at the calling site
+            }
+            return docRef.id
+          },
+          
 
-        },
-
+          async updateCustomDay(id, date, newAvailableSlots, newBookingId) {
+            try {
+                const docRef = doc(customDaysCollectionRef, id);
+                const customDayDoc = await getDoc(docRef);
         
-    async updateCustomDay(id, date, newAvailableSlots) {
-        await updateDoc(doc(customDaysCollectionRef, id), {
-            date,
-            availableSlots: newAvailableSlots,
-        });
-      },
+                if (customDayDoc.exists()) {
+                    let customDayData = customDayDoc.data();
+        
+                    // Validate and set default values
+                    const validatedDate = date || ""; // Use an empty string or a valid default
+                    const validatedAvailableSlots = Array.isArray(newAvailableSlots) ? newAvailableSlots : [];
+                    
+                    // Initialize bookings array if it's not present
+                    const validatedBookings = Array.isArray(customDayData.bookings) ? [...customDayData.bookings] : [];
+                    // Add the new booking ID to the bookings array
+                    if (newBookingId) {
+                        validatedBookings.push(newBookingId);
+                    }
+        
+                    // Log values to debug
+                    console.log("Updating custom day with:", validatedDate, validatedAvailableSlots, validatedBookings);
+        
+                    // Update the document with validated data
+                    await updateDoc(docRef, {
+                        date: validatedDate,
+                        availableSlots: validatedAvailableSlots,
+                        bookings: validatedBookings
+                    });
+                } else {
+                    console.error('Custom day document does not exist for ID:', id);
+                }
+            } catch (error) {
+                console.error('Error updating custom day:', error);
+            }
+        }
+,        
+        
+        
+  
 
         deleteDate(idToDelete) {
             this.dates = this.dates.filter(date => date.id !== idToDelete);
         },
-        updateDate(id, date, availableSlots, bookings) {
-            let index = this.dates.findIndex(date => date.id === id);
-            this.dates[index].date = date;
-            this.dates[index].availableSlots = availableSlots;
-            this.dates[index].bookings = bookings;
-        }
+      
     },
     getters: {
         getDate: (state) => {
