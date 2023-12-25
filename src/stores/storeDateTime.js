@@ -18,6 +18,9 @@ const customDaysCollectionQuery = query(
     orderBy('date', 'asc')
 );
 
+const stdWeekCollectionRef = collection(db, 'stdWeek');
+
+
 export const useStoreDateTime = defineStore('storeDateTime', {
     state: () => ({
         stdWeek: {
@@ -29,34 +32,65 @@ export const useStoreDateTime = defineStore('storeDateTime', {
         }
     }),
     actions: {
-        async getStdWeek() {
-            onSnapshot(collection(db, "stdWeek"), (querySnapshot) => {
+       
+            async getStdWeek() {
+                this.stdWeekLoaded = false
+              onSnapshot(stdWeekCollectionRef, (querySnapshot) => {
+                let stdWeek = [];
                 querySnapshot.forEach((doc) => {
-                    let stdWeek = doc.data();
-                    this.stdWeek.Tz6MddPkSmX85V1rJcHR = stdWeek;
+                  let std = {
+                    sun: doc.data().sun,
+                    mon: doc.data().mon,
+                    tue: doc.data().tue,
+                    wed: doc.data().wed,
+                    thu: doc.data().thu,
+                    fri: doc.data().fri,
+                    sat: doc.data().sat,
+                    sun: doc.data().sun,
+                  };
+                  stdWeek=(std);
                 });
-            });
+               
+                  this.stdWeek = stdWeek
+                  this.stdWeekLoaded = true
+              });
+              
         },
+        
+        async updateStdWeek(weekDay, slots) {
+            await updateDoc(doc(stdWeekCollectionRef, 'Tz6MddPkSmX85V1rJcHR'), {
+                [weekDay]: slots
+              });
+          },
         async getCustomDays() {
             onSnapshot(customDaysCollectionQuery, (querySnapshot) => {
                 let customDays = [];
-                querySnapshot.forEach((doc) => {
+                querySnapshot.forEach((doc, id) => {
                     let dayData = doc.data();
+                    dayData.id = doc.id
                     customDays.push(dayData);
                 });
                 this.dates = customDays;
             });
         },
-        async addCustomDay(newDate, newAvailableSlots, newBookings) {
+        async addCustomDay(newDate, newAvailableSlots) {
+            console.log(newDate, newAvailableSlots)
             const docRef = await addDoc(customDaysCollectionRef, {    
                 date: newDate,
                 availableSlots: newAvailableSlots,
-                bookings: newBookings
+             
             });
 
-
-
         },
+
+        
+    async updateCustomDay(id, date, newAvailableSlots) {
+        await updateDoc(doc(customDaysCollectionRef, id), {
+            date,
+            availableSlots: newAvailableSlots,
+        });
+      },
+
         deleteDate(idToDelete) {
             this.dates = this.dates.filter(date => date.id !== idToDelete);
         },

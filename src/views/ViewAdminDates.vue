@@ -39,7 +39,7 @@
         <label class="label is-3 has-text-white" for="selectedWeekday">Select a weekday:</label>
         <div class="select">      
           <select class="select" id="selectedWeekday" v-model="selectedWeekday">
-            <option @click="weekDaySelect" v-for="(timeSlots, day) in storeDateTime.stdWeek.Tz6MddPkSmX85V1rJcHR" :key="day" :value="day">
+            <option @click="weekDaySelect" v-for="(timeSlots, day) in storeDateTime.stdWeek" :key="day" :value="day">
               {{ fullWeekdayNames[day] }}
             </option>
           </select>
@@ -113,9 +113,12 @@ const formatDate = (date) => {
 
 const updateSlotsForSelectedDate = () => {
   if (date.value) {
-    const selectedWeekdayNumber = date.value.getDay();
+    const selectedWeekdayNumber = weekdayToNumber(selectedWeekday.value);
     const weekDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][selectedWeekdayNumber];
-    tempActiveTimeSlots.value = [...storeDateTime.stdWeek.Tz6MddPkSmX85V1rJcHR[weekDay]];
+    
+   
+    // Rest of the code
+    tempActiveTimeSlots.value = storeDateTime.stdWeek[weekDay];
   }
 };
 
@@ -151,7 +154,7 @@ const weekDaySelect = () => {
   selected.value = 'weekday';
   lastSelected.value = { type: 'weekday', value: selectedWeekday.value };
   
-  tempActiveTimeSlots.value = [...storeDateTime.stdWeek.Tz6MddPkSmX85V1rJcHR[selectedWeekday.value]];
+  tempActiveTimeSlots.value = storeDateTime.stdWeek[selectedWeekday.value];
   updateSlotsForSelectedDate()
 };
 
@@ -282,24 +285,27 @@ watch(selectedWeekday, () => {
 
 
 const saveChanges = () => {
+  let newAvailableSlots = [...tempActiveTimeSlots.value]
+
   if (lastSelected.value.type === 'calendar') {
     // Handle saving for a specific calendar day
     let selectedDateFormatted = formatDate(lastSelected.value.value);
     let dateObjIndex = storeDateTime.dates.findIndex(d => d.date === selectedDateFormatted);
-    
     if (dateObjIndex !== -1) {
-      storeDateTime.dates[dateObjIndex].availableSlots = [...tempActiveTimeSlots.value];
+      let customDayId = storeDateTime.dates[dateObjIndex].id
+      let customDayDate = storeDateTime.dates[dateObjIndex].date
+
+      storeDateTime.updateCustomDay(customDayId, customDayDate, newAvailableSlots) 
     } else {
-      storeDateTime.dates.push({
-        id: `date-${selectedDateFormatted}`,
-        date: selectedDateFormatted,
-        availableSlots: [...tempActiveTimeSlots.value],
-        bookings: []
-      });
+      storeDateTime.addCustomDay(selectedDateFormatted, newAvailableSlots)
+      
     }
   } else if (lastSelected.value.type === 'weekday') {
     // Handle saving for a specific weekday
-    storeDateTime.stdWeek.Tz6MddPkSmX85V1rJcHR[lastSelected.value.value] = [...tempActiveTimeSlots.value];
+
+    // storeDateTime.stdWeek[lastSelected.value.value] = [...tempActiveTimeSlots.value];
+   
+    storeDateTime.updateStdWeek(selectedWeekday.value, newAvailableSlots)
   }
 };
 
