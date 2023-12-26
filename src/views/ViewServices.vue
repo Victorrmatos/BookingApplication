@@ -1,12 +1,12 @@
 <template>
-      <StepIndicator class="step-indicator" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-
+    <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
+    
     <div class="columns">
         <div class="column is-one-third">
-            <div class="card is-dark transparent-70">
+            <div class="card is-dark transparent-70 ml-5">
                 <div class="card-content has-text-centered">
-                    <figure class="image is-inline-block is-128x128">
-                        <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                    <figure class="image is-inline-block is-256x256">
+                        <img class="is-rounded" :src="avatarUrl">
                     </figure>
                     <div class="text mt-5" @click="threeClicks">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum perspiciatis ea ullam commodi asperiores.
@@ -17,38 +17,38 @@
         </div>
         <div class="column">
             <progress
-v-if="!storeServices.servicesLoaded"
-  class="progress is-large is-dark"
-  max="100"
- />
- <template v-else>
-            <div class="services">
-                <RouterLink
-                to="/date">
-                <div
-                v-for="service in storeServices.services"
-                :key="service.id"
-                class="card mb-4 is-dark transparent-70"
-                @click="selectedService(service.name, service.duration)"
-                
-                >
-                <div class="card-content">
-                    <div class="content">
-                        <div class="columns">
-                            <div class="column left">
-                                <label>{{ service.name }}</label>
+            v-if="!storeServices.servicesLoaded"
+            class="progress is-large is-dark "
+            max="100"
+            />
+            <template v-else>
+                <div class="services">
+                    <RouterLink
+                    to="/date">
+                    <div
+                    v-for="service in storeServices.services"
+                    :key="service.id"
+                    class="card mb-4 is-dark transparent-70 mr-5"
+                    @click="selectedService(service.name, service.duration)"
+                    
+                    >
+                    <div class="card-content">
+                        <div class="content">
+                            <div class="columns">
+                                <div class="column left">
+                                    <label>{{ service.name }}</label>
+                                </div>
+                                <div class="column right">
+                                    <label>Є {{ service.price }}</label>
+                                </div>
                             </div>
-                            <div class="column right">
-                                <label>Є {{ service.price }}</label>
-                            </div>
+                            
                         </div>
-                        
                     </div>
                 </div>
-            </div>
-        </RouterLink>
-    </div>
-</template>
+            </RouterLink>
+        </div>
+    </template>
 </div>
 
 </div>
@@ -59,7 +59,7 @@ v-if="!storeServices.servicesLoaded"
 /*
 imports
 */
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useStoreServices } from '@/stores/storeServices'
 import { useStoreBookings } from '@/stores/storeBookings';
 import { useRouter } from 'vue-router';
@@ -103,18 +103,27 @@ const selectedService = (serviceName, duration) => {
     
     // Assign new booking to storeBookings
     storeBookings.newBooking = newBooking;
-
-
+    
+    
 }
 
 const clickCount = ref(0);
 const threeClicks = () => {
-  clickCount.value++;
-
-  if (clickCount.value === 3) {
-    router.push('/adminServices');
-  }
+    clickCount.value++;
+    
+    if (clickCount.value === 3) {
+        router.push('/adminServices');
+    }
 };
+
+const avatarUrl = ref('https://bulma.io/images/placeholders/128x128.png'); // Default avatar URL
+
+
+onMounted(async () => {
+    await storeColors.getAvatarUrl();
+    avatarUrl.value = storeColors.avatarImageUrl;
+});
+
 </script>
 
 <style>

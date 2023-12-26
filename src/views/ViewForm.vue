@@ -1,7 +1,7 @@
 <template>
-    <StepIndicator class="step-indicator" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
+    <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
     
-    
+    <div class="form-contol ml-5 mr-5">
     <div class="field">
         <label class="label has-text-white">First Name</label>
         <div class="control has-icons-right">
@@ -106,7 +106,7 @@
     </div>
     
     
-    <div class="field is-grouped">
+    <div class="field is-grouped pb-5">
         <div class="control">
             <RouterLink to="/confirmation">
                 <button class="button is-link" :disabled="!isFormValid" @click="submitForm">Submit</button>
@@ -116,7 +116,7 @@
             <button class="button is-link is-light">Cancel</button>
         </div>
     </div>
-    
+</div>
 </template>
 
 <script setup>

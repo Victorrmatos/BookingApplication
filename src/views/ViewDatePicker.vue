@@ -1,5 +1,5 @@
   <template>
-          <StepIndicator class="step-indicator" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
+          <StepIndicator class="step-indicator  pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
 
     <div class="columns is-vcentered">
       <!-- Date Picker Section -->
@@ -7,7 +7,7 @@
         <v-date-picker
         v-model="state.date"
         ref="calendar"
-        class="calendar is-dark transparent-70"
+        class="calendar is-dark transparent-70 ml-5 mr-5"
         style="width:100%"
         :style="{ backgroundColor: selectedColor }"
         :min-date="new Date()"
@@ -19,7 +19,7 @@
       
       <!-- Time Slots Section -->
       <div class="column is-half">
-        <h2 class="title is-5 has-text-white">{{ state.date.toDateString() }}</h2>
+        <h2 class="title is-5 has-text-white ml-5">{{ state.date.toDateString() }}</h2>
         <div class="columns">
           <!-- insert progress bar here -->
           <div class="column is-half mt-2">
@@ -29,7 +29,7 @@
                 <a @click="selectedDateTime(slot, index)">
                   <div
                     :class="{'selectedSlot': isSelected(slot)}"
-                    class="card mb-2 has-text-centered is-dark transparent-70"
+                    class="card mb-2 has-text-centered is-dark transparent-70 ml-5"
                     
                   >
                     <li v-if="index % 2 === 0 && hasConsecutiveSlots(slot, storeBookings.$state.newBooking.duration, index, state.dateSlots)">{{ slot }}</li>
@@ -44,7 +44,7 @@
                 <a @click="selectedDateTime(slot, index)">
                   <div
                     :class="{'selectedSlot': isSelected(slot)}"
-                    class="card mb-2 has-text-centered is-dark transparent-70"
+                    class="card mb-2 has-text-centered is-dark transparent-70 mr-5"
                     
                   >
 
@@ -57,7 +57,7 @@
         </div>
         <RouterLink to="/form">
           
-          <button v-if="state.tempSelectedSlots" class="button" @click="confirmSelection">Confirm Time</button>
+          <button v-if="state.tempSelectedSlots" class="button ml-5" @click="confirmSelection">Confirm Time</button>
           
         </RouterLink>
       </div>

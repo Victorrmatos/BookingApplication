@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <StepIndicator class="step-indicator" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
+        <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
         <div class="confirmation has-text-white">
             <h2 class="title has-text-white">Please confirm your booking details:</h2>
             <div class="columns">
