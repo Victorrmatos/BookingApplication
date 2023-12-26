@@ -8,8 +8,8 @@
         v-model="state.date"
         ref="calendar"
         class="calendar is-dark transparent-70 ml-5 mr-5"
-        style="width:100%"
-        :style="{ backgroundColor: selectedColor }"
+        style="width:93%"
+        :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
         :min-date="new Date()"
         :masks="state.masks"
         :disabled-dates="state.disabledDates"
@@ -19,7 +19,7 @@
       
       <!-- Time Slots Section -->
       <div class="column is-half">
-        <h2 class="title is-5 has-text-white ml-5">{{ state.date.toDateString() }}</h2>
+        <h2 class="title is-5 has-text-white ml-5 mr-5">{{ state.date.toDateString() }}</h2>
         <div class="columns">
           <!-- insert progress bar here -->
           <div class="column is-half mt-2">
@@ -29,8 +29,9 @@
                 <a @click="selectedDateTime(slot, index)">
                   <div
                     :class="{'selectedSlot': isSelected(slot)}"
-                    class="card mb-2 has-text-centered is-dark transparent-70 ml-5"
-                    
+                    class="card mb-2 has-text-centered is-dark transparent-70 ml-5 mr-5"
+                    :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+
                   >
                     <li v-if="index % 2 === 0 && hasConsecutiveSlots(slot, storeBookings.$state.newBooking.duration, index, state.dateSlots)">{{ slot }}</li>
                   </div>
@@ -44,8 +45,9 @@
                 <a @click="selectedDateTime(slot, index)">
                   <div
                     :class="{'selectedSlot': isSelected(slot)}"
-                    class="card mb-2 has-text-centered is-dark transparent-70 mr-5"
-                    
+                    class="card mb-2 has-text-centered is-dark transparent-70 ml-5 mr-5"
+                    :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+
                   >
 
                     <li v-if="index % 2 === 1 && hasConsecutiveSlots(slot, storeBookings.$state.newBooking.duration, index, state.dateSlots)">{{ slot }}</li>
@@ -57,7 +59,13 @@
         </div>
         <RouterLink to="/form">
           
-          <button v-if="state.tempSelectedSlots" class="button ml-5" @click="confirmSelection">Confirm Time</button>
+          <button
+            v-if="state.tempSelectedSlots[0]"
+            @click="confirmSelection"
+            class="button ml-5 mr-5 is-large"
+            :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+
+          >Confirm Time</button>
           
         </RouterLink>
       </div>
@@ -258,7 +266,9 @@
     background-color: #ccc;
   }
   .selectedSlot {
-    background-color: #fff; /* Set the background color to white for selected slots */
+    background-color: var(--text-color) !important; /* Set the background color to white for selected slots */
+    color: var(--background-color) !important; /* Set the background color to white for selected slots */
+
   }
   .calendar, .step-indicator, h2 {
       user-select: none;

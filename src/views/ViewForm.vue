@@ -109,11 +109,13 @@
     <div class="field is-grouped pb-5">
         <div class="control">
             <RouterLink to="/confirmation">
-                <button class="button is-link" :disabled="!isFormValid" @click="submitForm">Submit</button>
+                <button class="button" :disabled="!isFormValid" @click="submitForm"
+                :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+>Submit</button>
             </RouterLink>
         </div>
         <div class="control">
-            <button class="button is-link is-light">Cancel</button>
+            <RouterLink to="/date" class="button is-link is-light">Cancel</RouterLink>
         </div>
     </div>
 </div>
@@ -124,7 +126,11 @@ import { ref, watch, computed } from 'vue';
 import { useStoreBookings } from '@/stores/storeBookings';
 import { useStoreClients } from '@/stores/storeClients'; 
 import StepIndicator from '@/components/Layout/StepIndicator.vue';
+import { useStoreColors } from '@/stores/storeColors.js';
 
+
+
+const storeColors = useStoreColors();
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
 

@@ -5,13 +5,15 @@
           v-if="index <= maxStep"
           :key="`active-${step}`"
           :to="getRouteForStep(index)"
-          class="step-bar"
+          class="step-bar transparent-70"
           :class="{ 'is-active': index === currentStep }"
+          :style="{ backgroundColor: storeColors.textColor }"
         ></router-link>
         <div
           v-else
           :key="`disabled-${step}`"
-          class="step-bar is-disabled"
+          class="step-bar is-disabled transparent-70"
+          :style="{ backgroundColor: storeColors.backgroundColor }"
         ></div>
       </template>
     </div>
@@ -20,6 +22,10 @@
   <script setup>
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useStoreColors } from '@/stores/storeColors.js';
+
+  const storeColors = useStoreColors();
+
   
   const props = defineProps({
     totalSteps: {
@@ -59,19 +65,17 @@
     width: 60px;
     height: 30px;
     border-radius: 15px;
-    background-color: rgba(91, 91, 91, 0.45);
     margin: 5px;
     text-decoration: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
   .step-bar.is-active {
-    background-color: white;
+    /* Dynamic background color is set in the template */
   }
   
   .step-bar.is-disabled {
-    background-color: #ccc;
+    /* Dynamic background color is set in the template */
     pointer-events: none; /* Disable click events */
   }
-  </style>
-  
+</style>

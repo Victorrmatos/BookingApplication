@@ -1,6 +1,9 @@
 <template>
   <div :style="{ backgroundImage: 'url(' + storeColors.backgroundImageUrl + ')' }" class="app-container">
+    <div class="container"> 
+
     <RouterView />
+    </div>  
   </div>
 </template>
 
@@ -11,7 +14,7 @@
   import { useStoreDateTime } from '@/stores/storeDateTime'
   import { useStoreBookings } from '@/stores/storeBookings';
   import { useStoreServices } from '@/stores/storeServices';
-  import { onMounted, computed, watch, ref } from 'vue'
+  import { onMounted, computed, watch, ref, watchEffect } from 'vue'
   import { useStoreClients } from '@/stores/storeClients';
   import { useStoreColors } from '@/stores/storeColors'
 
@@ -37,11 +40,16 @@ onMounted(async () => {
   storeClients.getClients();
   await storeColors.getAvatarUrl();
   await storeColors.getBackgroundUrl();
-  backgroundImageUrl.value = storeColors.backgroundImageUrl; // Update the ref
+  storeColors.getColors() // Update the ref
 });
 
 watch(() => storeColors.backgroundImageUrl, (newUrl) => {
   console.log('New Background URL:', newUrl);
+});
+
+watchEffect(() => {
+  document.documentElement.style.setProperty('--text-color', storeColors.textColor);
+  document.documentElement.style.setProperty('--background-color', storeColors.backgroundColor);
 });
 
 const backgroundStyle = computed(() => ({

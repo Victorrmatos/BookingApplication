@@ -1,12 +1,14 @@
 <template>
   <nav
-    class="navbar is-dark transparent-80 mb-5"
+    class="navbar transparent-70 mb-5"
     aria-label="main navigation"
     role="navigation"
+    :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
   >
     <div class="container is-max-desktop px-2">
       <div class="navbar-brand">
-        <div class="navbar-item is-size-4 is-family-monospace">
+        <div class="navbar-item is-size-4 is-family-monospace"
+        :style="{ color: 'var(--text-color)'}">
           BookingApp
         </div>
 
@@ -29,13 +31,15 @@
         id="navbarBasicExample"
         class="navbar-menu"
         :class="{ 'is-active' : showMobileNav }"
+        
       >
-        <div class="navbar-end">
+        <div class="navbar-end" >
           <RouterLink
             to="/"
             class="navbar-item"
             active-class="is-active"
-            @click.prevent="toggleMobileNav"
+            @click.prevent="toggleMobileNav" 
+            :style="{ color: 'var(--text-color)'}"
           >
             New Booking
           </RouterLink>
@@ -45,6 +49,7 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
+            :style="{ color: 'var(--text-color)'}"
           >
             Admin Services
           </RouterLink>
@@ -53,6 +58,7 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
+            :style="{ color: 'var(--text-color)'}"
           >
             Admin Dates
           </RouterLink>
@@ -61,6 +67,7 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
+            :style="{ color: 'var(--text-color)'}"
           >
             Clients
           </RouterLink>
@@ -69,6 +76,7 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
+            :style="{ color: 'var(--text-color)'}"
           >
             Bookings
           </RouterLink>
@@ -77,6 +85,7 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
+            :style="{ color: 'var(--text-color)'}"
           >
             Appearance
           </RouterLink>
@@ -114,6 +123,7 @@ if (window.innerWidth <= 1023) {
 </script>
 
 <style>
+
 @media (max-width: 1023px) {
   .navbar-menu {
     position: absolute;

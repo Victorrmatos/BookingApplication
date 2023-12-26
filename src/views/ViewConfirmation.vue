@@ -1,7 +1,9 @@
 <template>
     <div class="container">
         <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-        <div class="confirmation has-text-white">
+        <div class="box transparent-80 confirmation has-text-white ml-5 mr-5"
+        :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+>
             <h2 class="title has-text-white">Please confirm your booking details:</h2>
             <div class="columns">
                 <div class="column">
@@ -31,7 +33,8 @@
             </div>
             
             <div class="control">
-                <button class="button" v-if="!bookingComplete" @click="confirmBooking()">Confirm Booking</button>
+                <button class="button" v-if="!bookingComplete" @click="confirmBooking()"     :style="{ color: 'var(--background-color)', backgroundColor: 'var(--text-color)'}">
+Confirm Booking</button>
                 <h2 style="font-size:30px" v-if="bookingComplete">Thank you, {{ bookingClient.fName }}! Your appointment is confirmed!</h2>
             </div>
         </div>
@@ -46,7 +49,11 @@ import { useStoreBookings } from '@/stores/storeBookings';
 import { useStoreClients } from '@/stores/storeClients';
 import { useStoreDateTime } from '@/stores/storeDateTime';
 import StepIndicator from '@/components/Layout/StepIndicator.vue';
+import { useStoreColors } from '@/stores/storeColors.js';
 
+
+ 
+  const storeColors = useStoreColors();
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
 const storeDateTime = useStoreDateTime();

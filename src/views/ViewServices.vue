@@ -1,14 +1,15 @@
 <template>
+
     <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-    
     <div class="columns">
         <div class="column is-one-third">
-            <div class="card is-dark transparent-70 ml-5">
-                <div class="card-content has-text-centered">
-                    <figure class="image is-inline-block is-256x256">
-                        <img class="is-rounded" :src="avatarUrl">
+
+            <div class="card transparent-70 ml-5 mr-5" :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
+                <div class="card-content avatar-card-content has-text-centered">
+                    <figure class="image avatar-figure is-inline-block is-256x256">
+                        <img class="is-rounded has-background-dark" :src="avatarUrl">
                     </figure>
-                    <div class="text mt-5" @click="threeClicks">
+                    <div class="text avatar-text mt-5" @click="threeClicks">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum perspiciatis ea ullam commodi asperiores.
                     </div>
                 </div>
@@ -18,7 +19,7 @@
         <div class="column">
             <progress
             v-if="!storeServices.servicesLoaded"
-            class="progress is-large is-dark "
+            class="progress is-large is-dark ml-5 mr-5"
             max="100"
             />
             <template v-else>
@@ -28,9 +29,9 @@
                     <div
                     v-for="service in storeServices.services"
                     :key="service.id"
-                    class="card mb-4 is-dark transparent-70 mr-5"
+                    class="card mb-4 transparent-70 ml-5 mr-5"
                     @click="selectedService(service.name, service.duration)"
-                    
+                    :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
                     >
                     <div class="card-content">
                         <div class="content">
@@ -70,7 +71,6 @@ import { useStoreColors } from '@/stores/storeColors.js';
 appearance
 */
 const storeColors = useStoreColors();
-const selectedColor = computed(() => storeColors.selectedColor)
 
 
 /*
@@ -133,5 +133,21 @@ onMounted(async () => {
 .text, img, image, figure, label, .step-indicator {
     user-select: none;
 }
+
+@media screen and (max-width: 768px) {
+  .avatar-card-content {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    justify-content: center; /* Center items horizontally */
+}
+  }
+  .avatar-figure, .avatar-text {
+    flex: 1; /* Each child takes equal space */
+
+
+  }
+  .avatar-text {
+    margin-right: 20px;
+  }
 
 </style>
