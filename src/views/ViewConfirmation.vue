@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-        <div class="box transparent-80 confirmation has-text-white ml-5 mr-5"
+        <div class="box transparent-80 confirmation ml-5 mr-5"
         :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
 >
-            <h2 class="title has-text-white">Please confirm your booking details:</h2>
+            <h2 class="title"  :style="{ color: 'var(--text-color)'}">Please confirm your booking details:</h2>
             <div class="columns">
                 <div class="column">
                     <h3>Service booked:</h3>
@@ -33,7 +33,7 @@
             </div>
             
             <div class="control">
-                <button class="button" v-if="!bookingComplete" @click="confirmBooking()"     :style="{ color: 'var(--background-color)', backgroundColor: 'var(--text-color)'}">
+                <button class="button" v-if="!bookingComplete" @click="confirmBooking()"  :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
 Confirm Booking</button>
                 <h2 style="font-size:30px" v-if="bookingComplete">Thank you, {{ bookingClient.fName }}! Your appointment is confirmed!</h2>
             </div>

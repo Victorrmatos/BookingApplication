@@ -38,7 +38,7 @@
       <div class="column has-text-white"> 
         <label class="label is-3 has-text-white" for="selectedWeekday">Select a weekday:</label>
         <div class="select">      
-          <select class="select" id="selectedWeekday" v-model="selectedWeekday">
+          <select class="select is-large" id="selectedWeekday" v-model="selectedWeekday">
             <option @click="weekDaySelect" v-for="(timeSlots, day) in storeDateTime.stdWeek" :key="day" :value="day">
               {{ fullWeekdayNames[day] }}
             </option>
@@ -53,9 +53,11 @@
       :min-date="new Date()"
       :masks="masks"
       :attributes="dateAttributes"
-      @click="calendarSelect" />
+      @click="calendarSelect" 
+      :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+      />
       <div class="is-full mt-5">
-        <button class="button" @click="saveChanges">Save time slots available for {{ displayText }}</button>
+        <button class="button is-medium" @click="saveChanges">Save time slots available for {{ displayText }}</button>
         
       </div>
     </div>

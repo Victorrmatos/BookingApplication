@@ -2,9 +2,9 @@
     <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
     
     <div class="form-contol ml-5 mr-5">
-    <div class="field">
-        <label class="label has-text-white">First Name</label>
-        <div class="control has-icons-right">
+    <div class="field" >
+        <label class="label" :style="{ color: 'var(--text-color)'}" >First Name</label>
+        <div class="control has-icons-right transparent-80">
             <input
             v-model="newClient.fName"
             @input="validateFirstName"
@@ -13,15 +13,19 @@
             placeholder="Please enter your first name"
             type="text"
             required
+            :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
             >
-            <span class="control has-text-danger icon is-small is-right" v-if="!isFirstNameValid">
-                <font-awesome-icon icon="times" />
+            <span class="icon control is-small is-right">
+                <i class="fas fa-user ml-5 mr-5"></i>
+                <span class="control has-text-danger icon is-small is-right" v-if="!isFirstNameValid">
+                    <i class="fas fa-times mr-5 pr-5" />
+                </span>
             </span>
         </div>
     </div>
     
     <div class="field">
-        <label class="label has-text-white">Last Name</label>
+        <label class="label" :style="{ color: 'var(--text-color)'}" >Last Name</label>
         <div class="control has-icons-right">
             <input
             v-model="newClient.lName"
@@ -30,17 +34,20 @@
             :class="['input', { 'is-danger': !isLastNameValid }]"
             placeholder="Please enter your last name"
             type="text"
+            :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
             required
             >
-            <span class="control has-text-danger icon is-small is-right" v-if="!isLastNameValid">
-                <font-awesome-icon icon="times" />
+            <span class="icon control is-small is-right">
+                <i class="fas fa-user ml-5 mr-5"></i>
+                <span class="control has-text-danger icon is-small is-right" v-if="!isLastNameValid">
+                    <i class="fas fa-times mr-5 pr-5" />
+                </span>
             </span>
         </div>
     </div>
-    
-    
+ 
     <div class="field">
-        <label class="label has-text-white">Phone</label>
+        <label class="label" :style="{ color: 'var(--text-color)'}" >Phone</label>
         <div class="control has-icons-right">
             <input
             v-model="newClient.phone"
@@ -49,17 +56,22 @@
             :class="['input', { 'is-danger': !isPhoneValid }]"
             placeholder="Please enter your phone number"
             type="tel"
+            :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+
             required
             >
-            <span class="control has-text-danger icon is-small is-right" v-if="!isPhoneValid">
-                <font-awesome-icon icon="times" />
+            <span class="icon control is-small is-right">
+                <i class="fas fa-phone  ml-5 mr-5"></i>
+                <span class="control has-text-danger icon is-small is-right" v-if="!isPhoneValid">
+                    <i class="fas fa-times  mr-5 pr-5" />
+                </span>
             </span>
         </div>
     </div>
     
     
     <div class="field">
-        <label class="label has-text-white">Email</label>
+        <label class="label" :style="{ color: 'var(--text-color)'}" >Email</label>
         <div class="control has-icons-right">
             <input
             v-model="newClient.email"
@@ -68,19 +80,21 @@
             :class="['input', { 'is-danger': !isEmailValid }]"
             placeholder="Your email"
             type="email"
+            :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+
             required
             >
-            <span class="icon is-small is-right">
-                <i class="fas fa-envelope"></i>
+            <span class="icon control is-small is-right">
+                <i class="fas fa-envelope ml-5 mr-5"></i>
                 <span class="control has-text-danger icon is-small is-right" v-if="!isEmailValid">
-                    <font-awesome-icon icon="times" />
+                    <i class="fas fa-times mr-5 pr-5" />
                 </span>
             </span>
         </div>
     </div>
     
     <div class="field">
-        <label class="label has-text-white">Preferences</label>
+        <label class="label" :style="{ color: 'var(--text-color)'}" >Preferences</label>
         <div class="control has-icons-right">
             <textarea
                 v-model="newClient.preferences"
@@ -88,25 +102,23 @@
                 @blur="validatePreferences"
                 :class="['textarea', { 'is-danger': !isPreferencesValid }]"
                 placeholder="Textarea"
-                required
+                :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+
             ></textarea>
-            <span class="icon is-small is-right" v-if="!isPreferencesValid">
-                <font-awesome-icon icon="times" />
+            <span class="icon control is-small is-right">
+                <i class="fas fa-comment ml-5 mr-5"></i>
+                <span class="control has-text-danger icon is-small is-right" v-if="!isPreferencesValid">
+                    <i class="fas fa-times mr-5 pr-5" />
+                </span>
             </span>
+           
+           
         </div>
     </div>
     
-    <div class="field">
-        <div class="control">
-            <label class="checkbox">
-                <input type="checkbox">
-                I agree to the <a href="#">terms and conditions</a>
-            </label>
-        </div>
-    </div>
+  
     
-    
-    <div class="field is-grouped pb-5">
+    <div class="field is-grouped pb-5 mt-4">
         <div class="control">
             <RouterLink to="/confirmation">
                 <button class="button" :disabled="!isFormValid" @click="submitForm"

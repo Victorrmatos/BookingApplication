@@ -10,8 +10,31 @@ export const useStoreColors = defineStore('storeColors', {
     backgroundImageUrl: '', // Initialize with an empty string or default URL
     previewTextColor: '#000000', // Default preview text color
     previewBackgroundColor: '#000000', // Default preview background color
+    avatarText: 'Default Text', // Default avatar text
+
   }),
   actions: {
+    async getAvatarText() {
+      const textDocRef = doc(db, 'content', 'avatarText');
+      try {
+        const textDoc = await getDoc(textDocRef);
+        if (textDoc.exists()) {
+          this.avatarText = textDoc.data().text;
+        }
+      } catch (error) {
+        console.error('Error fetching avatar text:', error);
+      }
+    },
+
+    async saveAvatarText(text) {
+      const textDocRef = doc(db, 'content', 'avatarText');
+      try {
+        await setDoc(textDocRef, { text });
+        this.avatarText = text;
+      } catch (error) {
+        console.error('Error saving avatar text:', error);
+      }
+    },
     
     async getColors() {
       const colorSettingsRef = doc(db, 'content', 'colorSettings');

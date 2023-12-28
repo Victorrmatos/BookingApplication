@@ -36,7 +36,7 @@ v-else
                     <td>
                         <div class="buttons are-small has-addons is-centered">
                     <button class="button is-small is-info compact-button">Edit</button>
-                    <button class="button is-small is-danger compact-button" @click="storeClients.deleteClient(client.id)">Delete</button>
+                    <button class="button is-small is-danger compact-button ml-2" @click="storeClients.deleteClient(client.id)">Delete</button>
                 </div>
                     </td>
                 </tr>

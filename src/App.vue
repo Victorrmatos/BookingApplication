@@ -40,12 +40,11 @@ onMounted(async () => {
   storeClients.getClients();
   await storeColors.getAvatarUrl();
   await storeColors.getBackgroundUrl();
-  storeColors.getColors() // Update the ref
+  storeColors.getColors() 
+  storeColors.getAvatarText()
 });
 
-watch(() => storeColors.backgroundImageUrl, (newUrl) => {
-  console.log('New Background URL:', newUrl);
-});
+
 
 watchEffect(() => {
   document.documentElement.style.setProperty('--text-color', storeColors.textColor);

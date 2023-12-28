@@ -22,7 +22,7 @@
 
 <progress
 v-if="!storeServices.servicesLoaded"
-  class="progress is-large is-dark"
+  class="progress is-large is-dark ml-5 mr-5"
   max="100"
  />
 <template
@@ -32,6 +32,7 @@ v-else
 v-for="service in storeServices.services"
 :key="service.id"
 class="card mb-4"
+
 >
 <div class="card-content">
     <div class="content">

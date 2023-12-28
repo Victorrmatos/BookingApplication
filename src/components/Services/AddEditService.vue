@@ -1,7 +1,8 @@
 <template>
     <div
-    class="card p-4 mb-5"
-    :class="`has-background-dark`"
+    class="card p-4 mb-5 transparent-70"
+    :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+
     >
     <label
     v-if="label"
@@ -16,7 +17,8 @@
            
             <div class="column is-two-thirds">
                 
-                <label class="label has-text-white">Name</label>
+                <label class="label"             :style="{ color: 'var(--text-color)'}"
+>Name</label>
                 <input
                 :value="modelName"
                 @input="$emit('update:modelName',  $event.target.value)"
@@ -28,7 +30,8 @@
                 />
             </div>
             <div class=" column is-one-sixth">
-                <label class="label has-text-white">Price (€)</label>
+                <label class="label "            :style="{ color: 'var(--text-color)'}"
+>Price (€)</label>
                 <input
                 :value="modelPrice"
                 @input="$emit('update:modelPrice',  $event.target.value)"
@@ -42,7 +45,8 @@
             <div class="column is-one-sixth field">
                 
                 <div class="field">
-                    <label class="label has-text-white">Duration</label>
+                    <label class="label "            :style="{ color: 'var(--text-color)'}"
+>Duration</label>
                     <div class="control">
                         <div class="select">
                             <select :value="modelDuration"
@@ -141,3 +145,4 @@ defineExpose({
 })
 
 </script>
+

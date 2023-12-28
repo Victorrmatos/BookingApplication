@@ -5,7 +5,6 @@
         v-model:modelName="modelName"
         v-model:modelPrice="modelPrice"
         v-model:modelDuration="modelDuration"
-        bgColor="link"
         placeholderName="Edit Service Name"
         placeholderPrice="Edit Price"
         placeholderDuration="Edit Duration"
