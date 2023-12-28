@@ -3,6 +3,7 @@
     <div class="services">
         
         <AddEditService
+        
         v-model:modelName="newServiceName"
         v-model:modelPrice="newServicePrice"
         v-model:modelDuration="newServiceDuration"
@@ -13,7 +14,9 @@
             <button
             @click="addService"
             :disabled="!newServiceName"
-            class="button is-link has-background-success"
+            class="button mr-5"
+            :style="{ backgroundColor: storeColors.textColor, color: storeColors.backgroundColor }"
+
             >
             Add New Service
         </button>
@@ -31,7 +34,8 @@ v-else
 <div
 v-for="service in storeServices.services"
 :key="service.id"
-class="card mb-4"
+class="card mb-4 transparent-80 "
+:style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
 
 >
 <div class="card-content">
@@ -55,6 +59,8 @@ class="card mb-4"
     :to="`/editService/${ service.id }`"
     class="card-footer-item"
     href="#"
+    :style="{ color: storeColors.textColor }"
+
     >
     Edit
 </RouterLink>
@@ -62,6 +68,8 @@ class="card mb-4"
 @click.prevent="storeServices.deleteService(service.id)"
 class="card-footer-item"
 href="#"
+:style="{ color: storeColors.textColor }"
+
 >
 Delete
 </a>
@@ -81,7 +89,7 @@ import { useStoreServices } from '@/stores/storeServices'
 import { useDateFormat } from '@vueuse/core'
 import NavBar from '@/components/Layout/NavBar.vue';
 import AddEditService from '@/components/Services/AddEditService.vue';
-
+import { useStoreColors } from '@/stores/storeColors'
 
 
 const storeServices = useStoreServices()
@@ -89,6 +97,7 @@ const newServiceName = ref('')
 const newServicePrice = ref('')
 const newServiceDuration = ref('')
 const addEditServiceRef = ref(null)
+const storeColors = useStoreColors()
 
 const addService = () => {
     storeServices.addService(newServiceName.value, newServicePrice.value, newServiceDuration.value)

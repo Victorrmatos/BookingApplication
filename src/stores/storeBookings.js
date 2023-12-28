@@ -3,7 +3,7 @@ import { collection, onSnapshot, doc, deleteDoc, updateDoc, addDoc, query, order
 import { db } from '@/js/firebase';
 
 const bookingsCollectionRef = collection(db, 'bookings');
-const bookingsCollectionQuery = query(bookingsCollectionRef, orderBy('date', 'asc'));
+const bookingsCollectionQuery = query(bookingsCollectionRef, orderBy('date', 'desc'));
 
 export const useStoreBookings = defineStore('storeBookings', {
     state: () => ({

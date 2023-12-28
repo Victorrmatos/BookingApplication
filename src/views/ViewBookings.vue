@@ -1,14 +1,16 @@
 <template>
     <NavBar />
     <div class="container">   <progress
-v-if="!storeBookings.bookingsLoaded"
-  class="progress is-large is-dark"
-  max="100"
- />
-<template
-v-else
->
-        <table class="table is-fullwidth is-striped">
+        v-if="!storeBookings.bookingsLoaded"
+        class="progress is-large is-dark"
+        max="100"
+        />
+        <template
+        v-else
+        >
+        <table class="table is-fullwidth is-striped transparent-80"
+        
+        >
             <thead>
                 <tr>
                     <th>ID</th>
@@ -19,7 +21,7 @@ v-else
                     <th>Actions</th>
                 </tr>
             </thead>
-         
+            
             <tbody>
                 <tr v-for="(booking, id) in storeBookings.bookings" :key="id">
                     <td>{{ booking.id }}</td>
@@ -38,7 +40,7 @@ v-else
                             </div>
                             <div class="column">
                                 <button class="button is-small is-danger" @click="storeBookings.deleteBooking(booking.id)">Delete</button>
-
+                                
                             </div>
                         </div>
                     </td>
@@ -46,9 +48,9 @@ v-else
             </tbody>
             
         </table>
-
+        
     </template>
-    </div>
+</div>
 </template>
 
 <script setup>
@@ -59,7 +61,6 @@ import NavBar from '@/components/Layout/NavBar.vue'
 
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
-
 const bookingsLoaded = computed(() => storeBookings.bookingsLoaded);
 
 const getFullClientName = (clientId) => {

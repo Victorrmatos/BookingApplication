@@ -2,7 +2,7 @@
     
     <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
     <div class="columns">
-        <div class="column is-one-third">
+        <div class="column avatar-card is-one-third">
             
             <div class="card transparent-70 ml-5 mr-5" :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
                 <div class="card-content avatar-card-content has-text-centered">
@@ -17,11 +17,16 @@
             
         </div>
         <div class="column">
+            <div class="content-wrapper ">
+
             <progress
             v-if="!storeServices.servicesLoaded"
-            class="progress is-large is-dark ml-5 mr-5"
+            class="progress is-large ml-5 mr-5"
             max="100"
+            :style="{ backgroundColor: 'var(--background-color)' }"
+
             />
+            
             <template v-else>
                 <div class="services">
                     <RouterLink
@@ -53,7 +58,7 @@
 </div>
 
 </div>
-
+</div>
 </template>
 
 <script setup>
@@ -126,7 +131,10 @@ onMounted(async () => {
 
 </script>
 
-<style>
+<style scoped>
+.progress {
+    margin-right: 50px;
+}
 .right{
     text-align: right;
 }
@@ -135,7 +143,6 @@ onMounted(async () => {
 }
 .avatar-figure {
     width: 128px; /* Set a consistent width */
-   
     height: 128px; /* Set a consistent height */
     display: flex;
     justify-content: center;
@@ -163,6 +170,10 @@ onMounted(async () => {
         max-width: 64px;
         height: 64px; /* Smaller size for mobile */
     }
+  
+
+
+
 }
 .avatar-figure, .avatar-text {
     flex: 1; /* Each child takes equal space */
@@ -173,5 +184,7 @@ onMounted(async () => {
     margin-right: 20px;
 }
 
+
+/* Ensure service cards take full width of the content wrapper */
 
 </style>

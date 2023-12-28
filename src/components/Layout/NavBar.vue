@@ -9,7 +9,7 @@
       <div class="navbar-brand">
         <div class="navbar-item is-size-4 is-family-monospace"
         :style="{ color: 'var(--text-color)'}">
-          BookingApp
+          Booking app  
         </div>
 
         <a
@@ -120,6 +120,8 @@ if (window.innerWidth <= 1023) {
   showMobileNav.value = !showMobileNav.value
 }
 }
+
+
 </script>
 
 <style>

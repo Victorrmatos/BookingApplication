@@ -11,7 +11,7 @@ v-if="!storeClients.clientsLoaded"
 v-else
 >
 <div class="table-container">
-        <table class="table is-fullwidth is-striped">
+        <table class="table is-fullwidth is-striped transparent-80">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -20,7 +20,7 @@ v-else
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Preferences</th>
-                    <th>Actions</th>
+                 
                 </tr>
             </thead>
             <tbody>
@@ -34,10 +34,9 @@ v-else
                         <div class="scrollablePreferences-cell">{{ client.preferences }}</div>
                     </td>
                     <td>
-                        <div class="buttons are-small has-addons is-centered">
-                    <button class="button is-small is-info compact-button">Edit</button>
+                        
                     <button class="button is-small is-danger compact-button ml-2" @click="storeClients.deleteClient(client.id)">Delete</button>
-                </div>
+                
                     </td>
                 </tr>
             </tbody>

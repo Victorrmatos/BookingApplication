@@ -3,67 +3,97 @@
   <div @keyup.enter="saveChanges">
     <div>
       
-      <h2 class="title is-size-4 is-full has-text-white has-text-centered mt-4">Modifying Time-Slots For <span class="title has-text-white">{{ displayText }}</span></h2>
+      <h2 class="title is-size-4 is-full has-text-white has-text-centered ml-5 mr-5">Modifying Time-Slots For <span class="title has-text-white">{{ displayText }}</span></h2>
       
-      
-      <div class="columns transparent-80 is-mobile">
-        <div class="column is-one-third mt-2">
-          <div v-for="(slot, index) in stdSlots" :key="slot">
-            <div v-if="index % 2 === 0" class="buttons column">
-              <button 
-              :class="['button', 'is-rounded', 'is-small', 'is-marginless', 'custom-button', { 'is-active': isActiveSlot(slot) }]" 
-              @click="toggleActiveSlot(slot)" 
-              :value="slot">
-              {{ slot }}
-            </button>
-            
-          </div>
-        </div>
-      </div>
-      <div class="column is-one-third mt-2">
-        <div v-for="(slot, index) in stdSlots" :key="slot">
-          <div v-if="index % 2 === 1" class="buttons column">
-            <button 
-            :class="['button', 'is-rounded', 'is-small', 'is-marginless', 'custom-button', { 'is-active': isActiveSlot(slot) }]" 
-            @click="toggleActiveSlot(slot)" 
-            :value="slot">
-            {{ slot }}
-          </button>
-          
-        </div>
-      </div>
+      <div class="level has-items-left">
+        
+        <h2 class="item"
+        :style="{ color: storeColors.textColor }"
+        >
+        <i class="fas fa-circle ml-5 mr-5" 
+        :style="{ color: storeColors.textColor }"
+        />
+        Slots Available for Bookings 
+      </h2>
     </div>
+    <div class="columns transparent-80 is-mobile"
+    >
     
-    <div id="app" class="calendar column ml-4 is-one-third">
-      <div class="column has-text-white"> 
-        <label class="label is-3 has-text-white" for="selectedWeekday">Select a weekday:</label>
-        <div class="select">      
-          <select class="select is-large" id="selectedWeekday" v-model="selectedWeekday">
-            <option @click="weekDaySelect" v-for="(timeSlots, day) in storeDateTime.stdWeek" :key="day" :value="day">
-              {{ fullWeekdayNames[day] }}
-            </option>
-          </select>
-        </div>  
-      </div>
-      <label class="label is-3 mt-3 has-text-white" for="calendar">Or select a day in the calendar:</label>
-      <v-date-picker
-      class="calendar"
-      v-model="date"
-      style="width:100%"
-      :min-date="new Date()"
-      :masks="masks"
-      :attributes="dateAttributes"
-      @click="calendarSelect" 
-      :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
-      />
-      <div class="is-full mt-5">
-        <button class="button is-medium" @click="saveChanges">Save time slots available for {{ displayText }}</button>
+    <div class="column is-one-third mt-2" >
+      
+      <div v-for="(slot, index) in stdSlots" :key="slot">
+        <div v-if="index % 2 === 0" class="buttons column">
+          <button 
+          :class="['button', 'is-rounded', 'is-small', 'is-marginless', 'custom-button', { 'is-active': isActiveSlot(slot) }]" 
+          @click="toggleActiveSlot(slot)" 
+          :value="slot"
+          :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+          
+          >
+          {{ slot }}
+        </button>
         
       </div>
     </div>
-    
   </div>
+  <div class="column is-one-third mt-2">
+    <div v-for="(slot, index) in stdSlots" :key="slot">
+      <div v-if="index % 2 === 1" class="buttons column">
+        <button 
+        :class="['button', 'is-rounded', 'is-small', 'is-marginless', 'custom-button', { 'is-active': isActiveSlot(slot) }]" 
+        @click="toggleActiveSlot(slot)" 
+        :value="slot"
+        :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+        
+        >
+        {{ slot }}
+      </button>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div id="app" class="calendar column ml-4 is-one-third">
   
+  <div class="column has-text-white"> 
+    
+    <label class="label is-3 has-text-white" for="selectedWeekday">Select a weekday:</label>
+    <div class="select control">      
+      <select class="select is-large" id="selectedWeekday" v-model="selectedWeekday"
+      :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+      >
+      <option @click="weekDaySelect" v-for="(timeSlots, day) in storeDateTime.stdWeek" :key="day" :value="day">
+        {{ fullWeekdayNames[day] }}
+      </option>
+    </select>
+  </div>  
+</div>
+<label class="label is-3 mt-3 has-text-white" for="calendar">Or select a day in the calendar:</label>
+<v-date-picker
+class="calendar"
+v-model="date"
+style="width:100%"
+:min-date="new Date()"
+:masks="masks"
+:attributes="dateAttributes"
+@click="calendarSelect" 
+:style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+/>
+<div class="is-full mt-5 ">
+  <button class="button is-medium" @click="saveChanges"
+  :style="{ backgroundColor: storeColors.textColor, color: storeColors.backgroundColor }"
+  style="width: 100%"
+  ><span class="file-icon">
+    <i class="fas fa-save"></i>
+  </span>  Save slots available for {{ displayText }}</button>
+  
+</div>
+</div>
+
+</div>
+
 </div>
 </div>
 </template>
@@ -72,8 +102,9 @@
 import { provide, ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useStoreDateTime } from '@/stores/storeDateTime';
 import NavBar from '@/components/Layout/NavBar.vue';
+import { useStoreColors } from '@/stores/storeColors'
 
-
+const storeColors = useStoreColors()
 const storeDateTime = useStoreDateTime();
 const selectedWeekday = ref('sun');
 const date = ref(new Date());
@@ -118,7 +149,7 @@ const updateSlotsForSelectedDate = () => {
     const selectedWeekdayNumber = weekdayToNumber(selectedWeekday.value);
     const weekDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][selectedWeekdayNumber];
     
-   
+    
     // Rest of the code
     tempActiveTimeSlots.value = storeDateTime.stdWeek[weekDay];
   }
@@ -173,10 +204,10 @@ onMounted(() => {
   };
   
   window.addEventListener('keyup', handleKeyup);
-
+  
   updateDateAttributes();
   
-
+  
   weekDaySelect();
   stdSlots.value = storeDateTime.slots.times;
   
@@ -248,7 +279,7 @@ const updateDateAttributes = () => {
   if (selected.value === 'weekday' && date.value instanceof Date) {
     const startOfMonth = new Date(date.value.getFullYear(), date.value.getMonth(), 1);
     const endOfMonth = new Date(date.value.getFullYear(), date.value.getMonth() + 1, 0);
-
+    
     for (let d = new Date(startOfMonth); d <= endOfMonth; d.setDate(d.getDate() + 1)) {
       if (d.getDay() === selectedWeekdayNumber.value) {
         attributes.push({
@@ -267,7 +298,7 @@ watch(selectedWeekday, updateDateAttributes);
 watch(() => date.value?.getMonth(), updateDateAttributes, { deep: true });
 
 
- 
+
 
 // Update watchers
 watch(() => date.value.getMonth(), () => {
@@ -288,7 +319,7 @@ watch(selectedWeekday, () => {
 
 const saveChanges = async () => {
   const newAvailableSlots = [...tempActiveTimeSlots.value];
-
+  
   if (lastSelected.value.type === 'calendar') {
     const selectedDateFormatted = formatDate(lastSelected.value.value);
     const dateObjIndex = storeDateTime.dates.findIndex(d => d.date === selectedDateFormatted);
@@ -343,14 +374,14 @@ const saveChanges = async () => {
 }
 
 .custom-button {
-  background-color: #ccc; 
-  color: #333; 
+  
   width: 100%;
 }
 
 .is-active {
-  background-color: #fff;
-  color: #fff;
+  background-color: var(--text-color) !important; /* Set the background color to white for selected slots */
+  color: var(--background-color) !important; /* Set the background color to white for selected slots */
+  ;
   border: 1px solid #fff;
 }
 </style>

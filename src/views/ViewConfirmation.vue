@@ -3,39 +3,46 @@
         <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
         <div class="box transparent-80 confirmation ml-5 mr-5"
         :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
->
-            <h2 class="title"  :style="{ color: 'var(--text-color)'}">Please confirm your booking details:</h2>
-            <div class="columns">
-                <div class="column">
-                    <h3>Service booked:</h3>
-                    <label>{{ storeBookings.newBooking.service }}</label>
-                    <h3>Booking date:</h3>
-                    <label>{{ storeBookings.newBooking.date }}</label>
-                    <h3>Booking time:</h3>
-                    <label>{{ storeBookings.newBooking.slots?.[0] }}</label>
-                </div>
-                
-                <!-- Client Details Section -->
-                <div class="column">
-                    <!-- Conditional Rendering -->
-                    <template v-if="bookingClient">
-                        <h3>Name:</h3>
-                        <label>{{ bookingClient.fName }} {{ bookingClient.lName }}</label>
-                        <h3>Email:</h3>
-                        <label>{{ bookingClient.email }}</label>
-                        <h3>Phone:</h3>
-                        <label>{{ bookingClient.phone }}</label>
-                        <h3>Preferences:</h3>
-                        <label>{{ bookingClient.preferences }}</label>
-                    </template>
-                    <progress v-else class="progress is-large is-dark" max="100"></progress>
-                </div>
+        >
+        <div class="level">
+            <div class="level-item has-text-centered">
+                <h2 class="title"  :style="{ color: 'var(--text-color)'}">Please confirm your booking details:</h2>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <h3>Service booked:</h3>
+                <label>{{ storeBookings.newBooking.service }}</label>
+                <h3>Booking date:</h3>
+                <label>{{ storeBookings.newBooking.date }}</label>
+                <h3>Booking time:</h3>
+                <label>{{ storeBookings.newBooking.slots?.[0] }}</label>
             </div>
             
-            <div class="control">
-                <button class="button" v-if="!bookingComplete" @click="confirmBooking()"  :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
-Confirm Booking</button>
-                <h2 style="font-size:30px" v-if="bookingComplete">Thank you, {{ bookingClient.fName }}! Your appointment is confirmed!</h2>
+            <!-- Client Details Section -->
+            <div class="column">
+                <!-- Conditional Rendering -->
+                <template v-if="bookingClient">
+                    <h3>Name:</h3>
+                    <label>{{ bookingClient.fName }} {{ bookingClient.lName }}</label>
+                    <h3>Email:</h3>
+                    <label>{{ bookingClient.email }}</label>
+                    <h3>Phone:</h3>
+                    <label>{{ bookingClient.phone }}</label>
+                    <h3>Preferences:</h3>
+                    <label>{{ bookingClient.preferences }}</label>
+                </template>
+                <progress v-else class="progress is-large is-dark" max="100"></progress>
+            </div>
+        </div>
+        <div class="level">
+            <div class="level-item has-text-centered">
+                <div class="control">
+                    <button class="button is-large" v-if="!bookingComplete" @click="confirmBooking()"  :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
+                        Confirm Booking</button>
+                        <h2 style="font-size:30px" v-if="bookingComplete">Thank you, {{ bookingClient.fName }}! Your appointment is confirmed!</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -52,8 +59,8 @@ import StepIndicator from '@/components/Layout/StepIndicator.vue';
 import { useStoreColors } from '@/stores/storeColors.js';
 
 
- 
-  const storeColors = useStoreColors();
+
+const storeColors = useStoreColors();
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
 const storeDateTime = useStoreDateTime();
@@ -149,11 +156,11 @@ const confirmBooking = async () => {
             updatedAvailableSlots,
             [newBookingId])
             await storeDateTime.updateCustomDay(
-    existingDate.id,
-    existingDate.date,
-    updatedAvailableSlots,
-    newBookingId // Pass as a single value
-);
+            existingDate.id,
+            existingDate.date,
+            updatedAvailableSlots,
+            newBookingId // Pass as a single value
+            );
         } else {
             // Calculate available slots based on the existing slots and bookings
             const existingDate = storeDateTime.dates.find((dateObj) =>
@@ -172,7 +179,7 @@ const confirmBooking = async () => {
             
             try {
                 const docRefId = await storeDateTime.addCustomDay(newDate.date, newDate.availableSlots, newDate.bookings);
-             
+                
             } catch (error) {
                 console.error('Error adding custom day:', error);
             }

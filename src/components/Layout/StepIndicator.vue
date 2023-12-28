@@ -62,7 +62,7 @@
   }
   
   .step-bar {
-    width: 60px;
+    width: 90px;
     height: 30px;
     border-radius: 15px;
     margin: 5px;
@@ -70,9 +70,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
-  .step-bar.is-active {
-    /* Dynamic background color is set in the template */
-  }
   
   .step-bar.is-disabled {
     /* Dynamic background color is set in the template */
