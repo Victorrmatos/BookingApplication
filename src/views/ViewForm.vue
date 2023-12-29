@@ -127,7 +127,8 @@
             </RouterLink>
         </div>
         <div class="control">
-            <RouterLink to="/date" class="button is-link is-light">Cancel</RouterLink>
+            <RouterLink to="/date" class="button"         :style="{ backgroundColor: storeColors.textColor, color: storeColors.backgroundColor }"
+>Cancel</RouterLink>
         </div>
     </div>
 </div>
@@ -247,6 +248,7 @@ const submitForm = async () => {
     if (newBooking) {
         newBooking.clientId = clientKey;
         newBooking.client = `${newClient.value.fName} ${newClient.value.lName}`;
+        
     }
 }
 

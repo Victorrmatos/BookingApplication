@@ -4,11 +4,12 @@
     aria-label="main navigation"
     role="navigation"
     :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+    
   >
     <div class="container is-max-desktop px-2">
       <div class="navbar-brand">
         <div class="navbar-item is-size-4 is-family-monospace"
-        :style="{ color: 'var(--text-color)'}">
+        :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)'}">
           Booking app  
         </div>
 
@@ -20,7 +21,9 @@
           aria-label="menu"
           data-target="navbarBasicExample"
           role="button"
-        >
+          :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)'}">
+
+        
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -39,7 +42,6 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav" 
-            :style="{ color: 'var(--text-color)'}"
           >
             New Booking
           </RouterLink>
@@ -49,7 +51,6 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
-            :style="{ color: 'var(--text-color)'}"
           >
             Admin Services
           </RouterLink>
@@ -58,7 +59,6 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
-            :style="{ color: 'var(--text-color)'}"
           >
             Admin Dates
           </RouterLink>
@@ -67,7 +67,6 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
-            :style="{ color: 'var(--text-color)'}"
           >
             Clients
           </RouterLink>
@@ -76,7 +75,6 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
-            :style="{ color: 'var(--text-color)'}"
           >
             Bookings
           </RouterLink>
@@ -85,7 +83,6 @@
             class="navbar-item"
             active-class="is-active"
             @click.prevent="toggleMobileNav"
-            :style="{ color: 'var(--text-color)'}"
           >
             Appearance
           </RouterLink>
@@ -100,7 +97,7 @@
   imports
 */
 
-  import { ref, computed } from 'vue'
+  import { ref } from 'vue'
   import { useStoreColors } from '@/stores/storeColors.js';
 
 
@@ -108,7 +105,6 @@
 appearance
 */
 const storeColors = useStoreColors();
-const selectedColor = computed(() => storeColors.selectedColor)
 
 /*
   mobile nav
@@ -131,6 +127,9 @@ if (window.innerWidth <= 1023) {
     position: absolute;
     left: 0;
     width: 100%;
+    
   }
 }
+
+
 </style>

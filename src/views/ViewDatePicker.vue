@@ -23,7 +23,7 @@
         <div class="box transparent-80 confirmation ml-5 mr-5"
         :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
         >
-        <h2 class="title is-5 has-text-white ml-5 mr-5">{{ state.date.toDateString() }}</h2>
+        <h2 class="title is-5 ml-5 mr-5" :style="{ color: 'var(--text-color)' }">{{ state.date.toDateString() }}</h2>
       </div>
       
       

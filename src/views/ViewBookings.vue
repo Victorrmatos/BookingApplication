@@ -18,7 +18,6 @@
                     <th>Client Name</th>
                     <th>Service</th>
                     <th>Slots Booked</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             
@@ -35,11 +34,9 @@
                     <td>{{ booking.slots }}</td>
                     <td>
                         <div class="columns">
+                          
                             <div class="column">
-                                <button class="button is-small is-info">Edit</button>
-                            </div>
-                            <div class="column">
-                                <button class="button is-small is-danger" @click="storeBookings.deleteBooking(booking.id)">Delete</button>
+                                <button class="button is-small is-danger" @click="deleteBookingUpdateDay(booking.id, booking.date, booking.slots)">Delete</button>
                                 
                             </div>
                         </div>
@@ -58,7 +55,9 @@ import { computed } from 'vue';
 import { useStoreBookings } from '@/stores/storeBookings';
 import { useStoreClients } from '@/stores/storeClients'; 
 import NavBar from '@/components/Layout/NavBar.vue'
+import { useStoreDateTime } from '@/stores/storeDateTime'
 
+const storeDateTime = useStoreDateTime();
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
 const bookingsLoaded = computed(() => storeBookings.bookingsLoaded);
@@ -67,4 +66,14 @@ const getFullClientName = (clientId) => {
     const client = storeClients.clients.find(client => client.id === clientId);
     return client ? `${client.fName} ${client.lName}` : 'Unknown Client';
 };
+
+const deleteBookingUpdateDay = (bookingId, bookingDate, bookingSlots) => {
+
+let date = storeDateTime.dates.find(obj => obj.date === bookingDate);
+           console.log('date',date,'dateId',date.id)
+           storeDateTime.removeBookingFromDay(date.id, bookingId, bookingSlots)
+storeBookings.deleteBooking(bookingId)
+
+
+        }
 </script>

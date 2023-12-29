@@ -97,6 +97,32 @@ export const useStoreDateTime = defineStore('storeDateTime', {
           },
           
 
+          async removeBookingFromDay(dateId, bookingId, bookingSlots){
+            const docRef = doc(customDaysCollectionRef, dateId);
+            const customDayDoc = await getDoc(docRef);
+            if (customDayDoc.exists()) {
+                let customDayData = customDayDoc.data();
+                let newAvailableSlots = customDayData.availableSlots
+                console.log('oldAvailableSlots',newAvailableSlots)
+
+                for (let i=0;i<bookingSlots.length;i++){
+                    newAvailableSlots.push(bookingSlots[i])
+                }
+                console.log('newAvailableSlots',newAvailableSlots)
+                console.log('oldBookings',customDayData.bookings)
+
+                let newBookings = customDayData.bookings.filter(item => item !== bookingId)
+                console.log('newBookings',newBookings)
+
+                await updateDoc(docRef, {
+                    
+                    availableSlots: newAvailableSlots,
+                    bookings: newBookings
+                });
+
+            }
+
+          },
           async updateCustomDay(id, date, newAvailableSlots, newBookingId) {
             try {
                 const docRef = doc(customDaysCollectionRef, id);

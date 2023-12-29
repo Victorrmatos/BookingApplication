@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-        <div class="box transparent-80 confirmation ml-5 mr-5"
+        <div v-if="bookingClient"
+         class="box transparent-80 confirmation ml-5 mr-5"
         :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
         >
         <div class="level">
@@ -9,30 +10,31 @@
                 <h2 class="title"  :style="{ color: 'var(--text-color)'}">Please confirm your booking details:</h2>
             </div>
         </div>
-        <div class="columns">
-            <div class="column">
-                <h3>Service booked:</h3>
-                <label>{{ storeBookings.newBooking.service }}</label>
-                <h3>Booking date:</h3>
-                <label>{{ storeBookings.newBooking.date }}</label>
-                <h3>Booking time:</h3>
-                <label>{{ storeBookings.newBooking.slots?.[0] }}</label>
+        <div class="columns has-text-centered">
+            <div class="column content">
+                <h5 :style="{ color: storeColors.textColor }"
+>Service booked:</h5>
+                <h4 :style="{ color: storeColors.textColor }">{{ storeBookings.newBooking.service }}</h4>
+                <h5 :style="{ color: storeColors.textColor }">Booking date:</h5>
+                <h4 :style="{ color: storeColors.textColor }">{{ storeBookings.newBooking.date }}</h4>
+                <h5 :style="{ color: storeColors.textColor }">Booking time:</h5>
+                <h4 :style="{ color: storeColors.textColor }">{{ storeBookings.newBooking.slots?.[0] }}</h4 >
             </div>
             
             <!-- Client Details Section -->
-            <div class="column">
+            <div class="column content">
                 <!-- Conditional Rendering -->
-                <template v-if="bookingClient">
-                    <h3>Name:</h3>
-                    <label>{{ bookingClient.fName }} {{ bookingClient.lName }}</label>
-                    <h3>Email:</h3>
-                    <label>{{ bookingClient.email }}</label>
-                    <h3>Phone:</h3>
-                    <label>{{ bookingClient.phone }}</label>
-                    <h3>Preferences:</h3>
-                    <label>{{ bookingClient.preferences }}</label>
+                <template >
+                    <h5 :style="{ color: storeColors.textColor }">Name:</h5>
+                    <h4 :style="{ color: storeColors.textColor }">{{ bookingClient.fName }} {{ bookingClient.lName }}</h4>
+                    <h5 :style="{ color: storeColors.textColor }">Email:</h5>
+                    <h4 :style="{ color: storeColors.textColor }">{{ bookingClient.email }}</h4>
+                    <h5 :style="{ color: storeColors.textColor }">Phone:</h5>
+                    <h4 :style="{ color: storeColors.textColor }">{{ bookingClient.phone }}</h4>
+                    <h5 :style="{ color: storeColors.textColor }">Preferences:</h5>
+                    <h4 :style="{ color: storeColors.textColor }">{{ bookingClient.preferences }}</h4>
                 </template>
-                <progress v-else class="progress is-large is-dark" max="100"></progress>
+                
             </div>
         </div>
         <div class="level">
@@ -44,7 +46,9 @@
                     </div>
                 </div>
             </div>
+            
         </div>
+        <progress v-else class="progress is-large" max="100" :style="{ backgroundColor: 'var(--background)'}"></progress>
     </div>
 </template>
 
@@ -91,6 +95,7 @@ onMounted(() => {
 watch(() => storeBookings.newBooking.clientId, (newClientId) => {
     loadBooking(newClientId);
 });
+
 
 
 const findDateIndex = (date) => {
@@ -198,4 +203,7 @@ const confirmBooking = async () => {
 .step-indicator, h2, h3, label {
     user-select: none;
 }
+
+
+
 </style>
