@@ -184,11 +184,7 @@ const weekDaySelect = () => {
 
 
   onMounted(async()  => {
-   await storeAuth.init()
-if (!storeAuth.user.id) {
-        router.push('/');
-    }
-    else{
+  
   stdSlots.value = storeDateTime.slots.times;
   updateDateAttributes();
   const handleKeyup = (event) => {
@@ -207,7 +203,7 @@ if (!storeAuth.user.id) {
   onUnmounted(() => {
     window.removeEventListener('keyup', handleKeyup);
   });
-}
+
 });
 
 watch(selectedWeekday, weekDaySelect);

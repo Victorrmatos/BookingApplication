@@ -172,15 +172,11 @@ const highlightClientBookings = async () => {
 };
 
 onMounted(async()  => {
-   await storeAuth.init()
-if (!storeAuth.user.id) {
-        router.push('/');
-    }
-    else{
+  
   if (clientIdFromRoute) {
     highlightClientBookings();
   }
-}
+
 });
 
 </script>

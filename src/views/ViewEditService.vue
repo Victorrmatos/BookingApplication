@@ -38,7 +38,7 @@
 <script setup>
 
 /*
-imports
+importsnpm 
 */
 
 import { ref } from 'vue'

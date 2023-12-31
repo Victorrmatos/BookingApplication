@@ -101,17 +101,13 @@ watch(() => route.query.clientId, (newClientId) => {
 
 
 onMounted(async () => { 
-await storeAuth.init()
-if (!storeAuth.user.id) {
-        router.push('/');
-    }
-    else{
+
         if (storeClients.clientsLoaded) {
     const clientId = route.query.clientId;
     if (clientId) {
       scrollToClient(clientId);
     }
-  }
+  
     }
 })
 

@@ -105,12 +105,6 @@ const addEditServiceRef = ref(null)
 const storeColors = useStoreColors()
 
 
-onMounted(async()  => {
-   await storeAuth.init()
-if (!storeAuth.user.id) {
-        router.push('/');
-    }
-})
 const addService = () => {
     storeServices.addService(newServiceName.value, newServicePrice.value, newServiceDuration.value)
     newServiceName.value = ''

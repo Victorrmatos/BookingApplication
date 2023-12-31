@@ -97,13 +97,7 @@ watch(() => storeAuth.user.id, (newUserId) => {
     }
 });
 
-onMounted(async () => { 
-storeAuth.init()
-if (storeAuth.user.id) {
-        console.log('User logged in, redirecting...');
-        router.push('/bookings');
-    }
-})
+
 
 
 /*

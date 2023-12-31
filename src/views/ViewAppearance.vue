@@ -207,16 +207,12 @@
   
  
     onMounted(async()  => {
-   await storeAuth.init()
-if (!storeAuth.user.id) {
-        router.push('/');
-    }
-    else{
+   
     await storeColors.getAvatarUrl();
     avatarUrl.value = storeColors.avatarImageUrl;
     await storeColors.getAvatarText()
     tempAvatarText.value = storeColors.avatarText
-    }
+    
   });
   
  
