@@ -41,7 +41,7 @@
 imports
 */
 
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AddEditService from '@/components/Services/AddEditService.vue'
 import { useStoreServices } from '@/stores/storeServices'
@@ -86,14 +86,6 @@ const handleSaveClicked = () => {
     router.push('/adminServices')
 }
 
-onMounted(async()  => {
-   await storeAuth.init()
-if (!storeAuth.user.id) {
-        router.push('/');
-    }
-    else{
-
-    }})
 </script>
 <style scoped>
 .button {
