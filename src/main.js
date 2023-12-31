@@ -7,12 +7,11 @@ import 'v-calendar/style.css';
 import CalendarComponent from '@/components/CalendarComponent.vue';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const pinia = createPinia();
 
 createApp(App)
 .use(router)
 .use(setupCalendar, {})
-.use(pinia)
+
 
 .component('VCalendar', Calendar)
 .component('VDatePicker', DatePicker)

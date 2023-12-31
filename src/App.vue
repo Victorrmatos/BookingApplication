@@ -104,4 +104,7 @@ html, body {
   height: auto;
 }
 
+.card, button {
+    border: 1px solid var(--text-color);
+}
   </style>

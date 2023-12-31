@@ -53,7 +53,7 @@
               </div>
             </div>
 
-            <textarea type="textarea" class="textarea" v-model="tempAvatarText" ></textarea>
+            <textarea type="textarea" class="textarea" v-model="tempAvatarText" v-autofocus></textarea>
 
 
             <div class="buttons">
@@ -92,7 +92,7 @@
                       </div>
                       <div class="column is-half">
                         <div v-for="service in storeServices.services" :key="service.id"
-                             class="card mb-4 transparent-70 ml-5 mr-5"
+                             class="card mb-4 transparent-70 "
                              @click="selectedService(service.name, service.duration)"
                              :style="{ backgroundColor: previewBackgroundColor, color: previewTextColor }">
                           <div class="card-content">
@@ -127,7 +127,8 @@
   import StepIndicator from '@/components/Layout/StepIndicator.vue';
   import { useStoreColors } from '@/stores/storeColors';
   import { useStoreServices } from '@/stores/storeServices';
-  
+  import { vAutofocus } from '@/directives/vAutofocus'
+
   const storeServices = useStoreServices();
   const storeColors = useStoreColors();
   const currentStep = ref(0);
@@ -209,4 +210,82 @@
     console.log('New Background URL:', newUrl);
   });
   </script>
+  
+  <style scoped>
+  .preview-container {
+    position: relative;
+    width: 100%;
+    padding-top: 0; /* Aspect ratio: 2:1 */
+  }
+  
+  /* Step Indicator */
+  .preview-container .step-indicator {
+    position: absolute;
+    top: 0; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Adjust as needed */
+    height: 10%; /* Adjust as needed */
+  }
+  
+  /* Avatar Card */
+  .preview-container .avatar-card {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  width: 30%; /* Adjust as needed */
+  height: 60%;
+  overflow: hidden;
+  max-width: 60px; /* Maximum width for the avatar card */
+}
+
+/* Image and Figure within the Avatar Card */
+.preview-container .avatar-card figure,
+.preview-container .avatar-card img {
+  max-width: 100%; /* Ensure they don't exceed the card's width */
+  height: auto; /* Maintain aspect ratio */
+}
+  
+  /* Services Cards */
+  .preview-container .services {
+    position: absolute;
+    top: 20%; /* Adjust as needed */
+    right: 5%; /* Adjust as needed */
+    width: 60%; /* Adjust as needed */
+    height: 60%; /* Adjust as needed */
+    overflow: hidden;
+  }
+  
+  /* Adjustments for smaller screens */
+  @media (max-width: 361px) {
+    .preview-container {
+      padding-top: 0%; /* Adjust for a different aspect ratio */
+    }
+
+  
+    .preview-container .services {
+      width: 90%; /* Full width on smaller screens */
+
+      left: 5%; /* Centered with a margin */
+      top: 5%; /* Adjust as needed */
+      height: 45%; /* Adjust as needed */
+    }
+    
+    .preview-container .services {
+      top: 55%; /* Position below the avatar card */
+    }
+  }
+  @media (max-width: 360px) {
+  .columns.is-mobile {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+  }
+}
+  </style>
   

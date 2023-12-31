@@ -8,7 +8,13 @@
         <template
         v-else
         >
-        <table class="table is-fullwidth is-striped transparent-80"
+        <div class="field">
+        <input type="checkbox" id="showOldBookings" v-model="showOldBookings" />
+        <label for="showOldBookings"
+        :style="{ color: 'var(--text-color)' }"
+> View old bookings</label>
+      </div>
+        <table class="table is-fullwidth is-narrow is-hoverable transparent-80"
         
         >
             <thead>
@@ -17,13 +23,15 @@
                     <th>Date</th>
                     <th>Client Name</th>
                     <th>Service</th>
-                    <th>Slots Booked</th>
+                    <th>Time Booked</th>
                 </tr>
             </thead>
-            
             <tbody>
-                <tr v-for="(booking, id) in storeBookings.bookings" :key="id">
-                    <td>{{ booking.id }}</td>
+                <tr v-for="(booking, id) in filteredBookings" :key="id" class="booking"
+    :class="{ 'today-booking': isBookingToday(booking.date), 'old-booking': isBookingOld(booking.date) && !isBookingToday(booking.date) }">
+   
+  
+            <td>{{ booking.id }}</td>
                     <td>{{ booking.date }}</td>
                     <td>
                         <router-link :to="`/clients/`">
@@ -31,12 +39,17 @@
                         </router-link>
                     </td>
                     <td>{{ booking.service }}</td>
-                    <td>{{ booking.slots }}</td>
+                    <td>{{ formatSlots(booking.slots) }}</td>
                     <td>
                         <div class="columns">
                           
                             <div class="column">
-                                <button class="button is-small is-danger" @click="deleteBookingUpdateDay(booking.id, booking.date, booking.slots)">Delete</button>
+                                <button class="button is-small is-danger"
+                      
+                        @click="deleteBookingUpdateDay(booking.id, booking.date, booking.slots)"
+                     >
+                    Delete
+                </button>
                                 
                             </div>
                         </div>
@@ -51,16 +64,79 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStoreBookings } from '@/stores/storeBookings';
 import { useStoreClients } from '@/stores/storeClients'; 
-import NavBar from '@/components/Layout/NavBar.vue'
-import { useStoreDateTime } from '@/stores/storeDateTime'
+import NavBar from '@/components/Layout/NavBar.vue';
+import { useStoreDateTime } from '@/stores/storeDateTime';
 
 const storeDateTime = useStoreDateTime();
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
-const bookingsLoaded = computed(() => storeBookings.bookingsLoaded);
+// Reactive variable for checkbox state
+const showOldBookings = ref(false);
+
+// Modify the sortedBookings computed property
+const filteredBookings = computed(() => {
+  return sortedBookings.value.filter(booking => 
+    showOldBookings.value || !isBookingOld(booking.date)
+  );
+});
+// Function to convert date string from dd-mm-yyyy to yyyy-mm-dd
+const convertDate = (dateStr) => {
+    const parts = dateStr.split('-');
+    return new Date(parts[2], parts[1]-1, parts[0]);
+};
+
+// Method to format slots into a time range string
+const formatSlots = (slots) => {
+  const times = storeDateTime.slots.times;
+  const startTime = slots[0];
+  const endTimeIndex = times.indexOf(slots[slots.length - 1]) + 1;
+  const endTime = times[endTimeIndex] || times[times.length - 1];
+  return `${startTime} - ${endTime}`;
+};
+
+
+// Sorted bookings computed property
+const sortedBookings = computed(() => {
+  return [...storeBookings.bookings].sort((a, b) => {
+    const dateA = convertDate(a.date);
+    const dateB = convertDate(b.date);
+
+    // First, compare by dates
+    if (dateA < dateB) return -1;
+    if (dateA > dateB) return 1;
+
+    // If dates are the same, compare by slots
+    const slotsA = parseInt(a.slots[0]); // Assuming slots is an array and you're sorting by the first slot
+    const slotsB = parseInt(b.slots[0]); // Adjust as per your data structure
+
+    return slotsA - slotsB;
+  });
+});
+const today = new Date();
+today.setHours(0, 0, 0, 0); // Remove time part for accurate comparison
+
+// Convert dd-mm-yyyy string to Date object
+const convertToDateObject = (dateStr) => {
+    const parts = dateStr.split('-');
+    return new Date(parts[2], parts[1] - 1, parts[0]);
+};
+
+// Check if a booking is for today
+const isBookingToday = (bookingDate) => {
+    let convertedDate = convertToDateObject(bookingDate);
+    return convertedDate.getFullYear() === today.getFullYear() &&
+           convertedDate.getMonth() === today.getMonth() &&
+           convertedDate.getDate() === today.getDate();
+};
+
+// Check if a booking is older than today
+const isBookingOld = (bookingDate) => {
+    let convertedDate = convertToDateObject(bookingDate);
+    return convertedDate < today;
+};
 
 const getFullClientName = (clientId) => {
     const client = storeClients.clients.find(client => client.id === clientId);
@@ -68,12 +144,29 @@ const getFullClientName = (clientId) => {
 };
 
 const deleteBookingUpdateDay = (bookingId, bookingDate, bookingSlots) => {
-
-let date = storeDateTime.dates.find(obj => obj.date === bookingDate);
-           console.log('date',date,'dateId',date.id)
-           storeDateTime.removeBookingFromDay(date.id, bookingId, bookingSlots)
-storeBookings.deleteBooking(bookingId)
-
-
-        }
+    let date = storeDateTime.dates.find(obj => obj.date === bookingDate);
+    console.log('date', date, 'dateId', date.id);
+    storeDateTime.removeBookingFromDay(date.id, bookingId, bookingSlots);
+    storeBookings.deleteBooking(bookingId);
+};
 </script>
+<style scoped>
+.booking {
+    background-color: var(--text-color); /* Highlight today's bookings */
+    color: var(--background-color);
+}
+
+.today-booking {
+    background-color: white;
+    color: black;
+}
+
+.old-booking {
+    background-color: #5A5A5A; /* Grey out older bookings */
+}
+
+.is-greyed-out {
+    background-color: grey; /* Grey out buttons for older bookings */
+    cursor: not-allowed;
+}
+</style>

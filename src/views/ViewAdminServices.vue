@@ -15,7 +15,7 @@
             @click="addService"
             :disabled="!newServiceName"
             class="button mr-5"
-            :style="{ backgroundColor: storeColors.textColor, color: storeColors.backgroundColor }"
+            :style="{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }"
 
             >
             Add New Service

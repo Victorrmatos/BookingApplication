@@ -15,14 +15,18 @@
             <button
             @click="$router.back()"
             class="button is-link is-light mr-2"
+            :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+
             >
             Cancel
         </button>
         <button
         @click="handleSaveClicked"
-        class="button is-link has-background-link"
+        :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+
+        class="button is-link "
         :disabled="!modelName"
-        
+       
         >
         Save Service
     </button>
@@ -42,7 +46,7 @@ import { useRoute, useRouter } from 'vue-router'
 import AddEditService from '@/components/Services/AddEditService.vue'
 import { useStoreServices } from '@/stores/storeServices'
 import NavBar from '@/components/Layout/NavBar.vue'
-
+import { useStoreColors } from '@/stores/storeColors'
 
 /*
 router
@@ -55,6 +59,7 @@ const router = useRouter()
 store
 */
 
+const storeColors = useStoreColors()
 const storeServices = useStoreServices()
 
 /*
@@ -75,3 +80,7 @@ const handleSaveClicked = () => {
 }
 
 </script>
+<style scoped>
+.button {
+    border: 1px solid var(--text-color);
+}</style>

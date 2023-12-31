@@ -11,7 +11,7 @@ v-if="!storeClients.clientsLoaded"
 v-else
 >
 <div class="table-container">
-        <table class="table is-fullwidth is-striped transparent-80">
+        <table class="table is-fullwidth is-striped transparent-80 is-hoverable"  v-autofocus>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -50,6 +50,7 @@ v-else
 <script setup>
 import { useStoreClients } from '@/stores/storeClients'; 
 import NavBar from '@/components/Layout/NavBar.vue'
+import { vAutofocus } from '@/directives/vAutofocus'
 
 const storeClients = useStoreClients();
 </script>

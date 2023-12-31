@@ -14,6 +14,7 @@
             type="text"
             required
             :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
+            v-autofocus
             >
             <span class="icon control is-small is-right">
                 <i class="fas fa-user ml-5 mr-5"></i>
@@ -140,6 +141,7 @@ import { useStoreBookings } from '@/stores/storeBookings';
 import { useStoreClients } from '@/stores/storeClients'; 
 import StepIndicator from '@/components/Layout/StepIndicator.vue';
 import { useStoreColors } from '@/stores/storeColors.js';
+import { vAutofocus } from '@/directives/vAutofocus'
 
 
 

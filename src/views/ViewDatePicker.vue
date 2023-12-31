@@ -19,7 +19,7 @@
       
       <!-- Time Slots Section -->
       
-      <div class="column is-half">
+      <div class="column is-half has-text-centered">
         <div class="box transparent-80 confirmation ml-5 mr-5"
         :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
         >
@@ -33,9 +33,10 @@
           <template v-for="(slot, index) in state.dateSlots" :key="index">
             <li v-if="hasConsecutiveSlots(slot, storeBookings.$state.newBooking.duration, index, state.dateSlots)"
             :class="{'selectedSlot': isSelected(slot)}"
-            class="button custom-button is-rounded has-text-centered is-dark transparent-70"
+            class=" button custom-button is-rounded has-text-centered is-dark transparent-70"
             @click="selectedDateTime(slot, index)"
-            :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }">
+            :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+            style="border: 1px solid var(--text-color)">
             {{ slot }}
           </li>
         </template>
@@ -113,17 +114,24 @@ const formatDate = (date) => {
 };
 
 const updateDateSlots = async () => {
-  const formattedDate = formatDate(state.date);
+  if (state.date instanceof Date){
+    const formattedDate = formatDate(state.date);
   await storeDateTime.getCustomDays(); // Ensure data is loaded
   const dateObj = storeDateTime.dates.find((d) => d.date === formattedDate);
   
   const weeklySlots = getWeeklySlots(state.date);
-  state.dateSlots = dateObj && dateObj.availableSlots ? dateObj.availableSlots : weeklySlots;
+
+  // Sort slots in ascending order
+  const sortedSlots = dateObj && dateObj.availableSlots
+                        ? dateObj.availableSlots.sort()
+                        : weeklySlots.sort();
+
+  state.dateSlots = sortedSlots;
   
   if (!dateObj ) {
     console.warn(`No data found for date: ${formattedDate}`);
   }
-  
+}
   state.isLoading = false; // Update loading state
 };
 
@@ -288,4 +296,5 @@ a, h2{
   margin: 0 0 20px 0; /* Adjust margin as needed */
   
 }
+
 </style>

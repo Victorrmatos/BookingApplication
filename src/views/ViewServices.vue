@@ -1,64 +1,44 @@
 <template>
-    
     <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
     <div class="columns">
         <div class="column avatar-card is-one-third">
-            
-            <div class="card transparent-70 ml-5 mr-5" :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
+            <div class="box transparent-70 ml-5 mr-5" :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
                 <div class="card-content avatar-card-content has-text-centered">
                     <figure class="image avatar-figure is-inline-block mt-5 mb-5">
                         <img class="is-rounded avatar-img" :src="avatarUrl">
                     </figure>
                     <div class="text avatar-text mt-5 ml-5 mr-5 mb-5" @click="threeClicks">
-                      {{ storeColors.avatarText}}
+                        {{ storeColors.avatarText }}
                     </div>
                 </div>
             </div>
-            
         </div>
         <div class="column">
-            <div class="content-wrapper ">
-
-            <progress
-            v-if="!storeServices.servicesLoaded"
-            class="progress is-large ml-5 mr-5"
-            max="100"
-            :style="{ backgroundColor: 'var(--background-color)' }"
-
-            />
-            
-            <template v-else>
-                <div class="services">
-                    <RouterLink
-                    to="/date">
-                    <div
-                    v-for="service in storeServices.services"
-                    :key="service.id"
-                    class="card mb-4 transparent-70 ml-5 mr-5"
-                    @click="selectedService(service.name, service.duration)"
-                    :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
-                    >
-                    <div class="card-content">
-                        <div class="content">
-                            <div class="columns">
-                                <div class="column left">
-                                    <label>{{ service.name }}</label>
-                                </div>
-                                <div class="column right">
-                                    <label>Є {{ service.price }}</label>
+            <div class="content-wrapper">
+                <progress v-if="!storeServices.servicesLoaded" class="progress is-large ml-5 mr-5" max="100" :style="{ backgroundColor: 'var(--background-color)' }"></progress>
+                <template v-else>
+                    <div class="services">
+                        <RouterLink to="/date">
+                            <div v-for="service in storeServices.services" :key="service.id" class="card mb-4 transparent-70 ml-5 mr-5" @click="selectedService(service.name, service.duration)" :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
+                                <div class="card-content">
+                                    <div class="content">
+                                        <div class="columns">
+                                            <div class="column left">
+                                                <label>{{ service.name }}</label>
+                                            </div>
+                                            <div class="column right">
+                                                <label>Є {{ service.price }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                        </div>
+                        </RouterLink>
                     </div>
-                </div>
-            </RouterLink>
+                </template>
+            </div>
         </div>
-    </template>
-</div>
-
-</div>
-</div>
+    </div>
 </template>
 
 <script setup>
@@ -132,59 +112,50 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@media (min-width: 1024px) {
+  .column.is-one-third {
+    width: 33.333%;
+  }
+
+  .column.is-two-thirds {
+    width: 66.666%;
+  }
+}
 .progress {
     margin-right: 50px;
 }
-.right{
+.right {
     text-align: right;
 }
 .text, img, image, figure, label, .step-indicator {
     user-select: none;
 }
 .avatar-figure {
-    width: 128px; /* Set a consistent width */
-    height: 128px; /* Set a consistent height */
+    width: 128px;
+    height: 128px;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Hide parts of the image that exceed the container */
-    border-radius: 50%; /* Make it round */
-    margin: 0 auto; /* Center align if needed */
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0 auto;
 }
-
 .avatar-img {
-    max-width: 100%; /* Limit the image width */
-    max-height: 100%; /* Limit the image height */
-    object-fit: cover; /* Resize the image to cover the container */
-    border-radius: 50%; /* Ensure round shape */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 
-@media screen and (max-width: 768px) {
-    .avatar-card-content {
-        display: flex;
-        align-items: center; /* Align items vertically in the center */
-        justify-content: center; /* Center items horizontally */
-    }
-    .avatar-figure {
-        max-width: 64px;
-        height: 64px; /* Smaller size for mobile */
-    }
-  
-
-
-
+/* Adjust the width of avatar-card and services to 100% */
+.avatar-card, .services {
+    width: 100%;
 }
+
 .avatar-figure, .avatar-text {
-    flex: 1; /* Each child takes equal space */
-    
-    
-}
-.avatar-text {
-    margin-right: 20px;
+    flex: 1;
 }
 
-
-/* Ensure service cards take full width of the content wrapper */
 
 </style>

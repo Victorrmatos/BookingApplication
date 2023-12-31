@@ -2,7 +2,7 @@
     <div
     class="card p-4 mb-5 transparent-70"
     :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
-
+    
     >
     <label
     v-if="label"
@@ -14,15 +14,15 @@
 <div class="field">
     <div class="control">
         <div class="columns">
-           
+            
             <div class="column is-two-thirds">
                 
                 <label class="label"             :style="{ color: 'var(--text-color)'}"
->Name</label>
+                >Name</label>
                 <input
                 :value="modelName"
                 @input="$emit('update:modelName',  $event.target.value)"
-                class="input"
+                class="input uniform-height"
                 :placeholder="placeholderName"
                 ref="textareaRef"
                 maxlength="100"
@@ -31,25 +31,29 @@
             </div>
             <div class=" column is-one-sixth">
                 <label class="label "            :style="{ color: 'var(--text-color)'}"
->Price (€)</label>
+                >Price (€)</label>
                 <input
+                
                 :value="modelPrice"
                 @input="$emit('update:modelPrice',  $event.target.value)"
-                class="input"
+                class="input uniform-height"
                 :placeholder="placeholderPrice"
                 ref="textareaRef"
                 maxlength="100"
-                v-autofocus
+                
                 />
             </div>
             <div class="column is-one-sixth field">
                 
-                <div class="field">
+                <div class="field ">
                     <label class="label "            :style="{ color: 'var(--text-color)'}"
->Duration</label>
+                    >Duration</label>
                     <div class="control">
-                        <div class="select">
+                        <div class="select"
+                        
+                        >
                             <select :value="modelDuration"
+                           
                             @input="$emit('update:modelDuration',  $event.target.value)">
                             <option value="1">30 min</option>
                             <option value="2">1 hour</option>
@@ -70,7 +74,7 @@
 
 <div class="field is-grouped is-grouped-right">
     <div class="control">
-        <slot name="buttons" />
+        <slot name="buttons"  />
     </div>
 </div>
 </div>
@@ -146,3 +150,8 @@ defineExpose({
 
 </script>
 
+<style scoped>
+.uniform-height {
+  height: 2.8em; /* Example height, adjust as needed */
+}
+</style>
