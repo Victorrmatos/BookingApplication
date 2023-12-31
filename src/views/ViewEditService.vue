@@ -41,7 +41,7 @@
 imports
 */
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AddEditService from '@/components/Services/AddEditService.vue'
 import { useStoreServices } from '@/stores/storeServices'
@@ -92,7 +92,7 @@ if (!storeAuth.user.id) {
         router.push('/');
     }
     else{
-        
+
     }})
 </script>
 <style scoped>
