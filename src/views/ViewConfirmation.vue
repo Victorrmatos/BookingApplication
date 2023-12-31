@@ -183,6 +183,12 @@ const confirmBooking = async () => {
     const parsedDate = parseDate(bookingDate);
     
     if (parsedDate) {
+        console.log( storeBookings.newBooking.client,
+        storeBookings.newBooking.clientId,
+        storeBookings.newBooking.service,
+        storeBookings.newBooking.slots,
+        storeBookings.newBooking.date)
+        
         const newBookingId = await storeBookings.addBooking(    
         storeBookings.newBooking.client,
         storeBookings.newBooking.clientId,

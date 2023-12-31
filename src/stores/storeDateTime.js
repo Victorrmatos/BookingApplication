@@ -76,14 +76,12 @@ export const useStoreDateTime = defineStore('storeDateTime', {
         },
         async addCustomDay(newDate, newAvailableSlots, bookings =[]) {
             try {
-              console.log('Adding custom day: bookings: ', bookings);
               const docRef = await addDoc(customDaysCollectionRef, {
                 date: newDate,
                 availableSlots: newAvailableSlots,
                 bookings: bookings
               });
               if (docRef.id) {
-                console.log('Custom day added with ID:', docRef.id);
                 return docRef.id;
               } else {
                 console.error('Unable to obtain ID from docRef:', docRef);
@@ -103,16 +101,12 @@ export const useStoreDateTime = defineStore('storeDateTime', {
             if (customDayDoc.exists()) {
                 let customDayData = customDayDoc.data();
                 let newAvailableSlots = customDayData.availableSlots
-                console.log('oldAvailableSlots',newAvailableSlots)
 
                 for (let i=0;i<bookingSlots.length;i++){
                     newAvailableSlots.push(bookingSlots[i])
                 }
-                console.log('newAvailableSlots',newAvailableSlots)
-                console.log('oldBookings',customDayData.bookings)
 
                 let newBookings = customDayData.bookings.filter(item => item !== bookingId)
-                console.log('newBookings',newBookings)
 
                 await updateDoc(docRef, {
                     
@@ -142,8 +136,7 @@ export const useStoreDateTime = defineStore('storeDateTime', {
                         validatedBookings.push(newBookingId);
                     }
         
-                    // Log values to debug
-                    console.log("Updating custom day with:", validatedDate, validatedAvailableSlots, validatedBookings);
+              
         
                     // Update the document with validated data
                     await updateDoc(docRef, {

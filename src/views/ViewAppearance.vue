@@ -127,8 +127,14 @@
   import StepIndicator from '@/components/Layout/StepIndicator.vue';
   import { useStoreColors } from '@/stores/storeColors';
   import { useStoreServices } from '@/stores/storeServices';
+  import { useStoreAuth } from '@/stores/storeAuth'
   import { vAutofocus } from '@/directives/vAutofocus'
+  import { useRouter } from 'vue-router';
 
+  const router = useRouter()
+
+
+  const storeAuth = useStoreAuth()
   const storeServices = useStoreServices();
   const storeColors = useStoreColors();
   const currentStep = ref(0);
@@ -199,16 +205,21 @@
     tempAvatarText.value = storeColors.avatarText
   };
   
-  onMounted(async () => {
+ 
+    onMounted(async()  => {
+   await storeAuth.init()
+if (!storeAuth.user.id) {
+        router.push('/');
+    }
+    else{
     await storeColors.getAvatarUrl();
     avatarUrl.value = storeColors.avatarImageUrl;
     await storeColors.getAvatarText()
     tempAvatarText.value = storeColors.avatarText
+    }
   });
   
-  watch(() => storeColors.backgroundImageUrl, (newUrl) => {
-    console.log('New Background URL:', newUrl);
-  });
+ 
   </script>
   
   <style scoped>

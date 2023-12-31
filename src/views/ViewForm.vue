@@ -1,6 +1,10 @@
 <template>
     <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
-    
+    <div
+        class="box transparent-80 confirmation "
+        style="min-width: 300px;"
+        :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
+        >
     <div class="form-contol ml-5 mr-5">
     <div class="field" >
         <label class="label" :style="{ color: 'var(--text-color)'}" >First Name</label>
@@ -81,6 +85,7 @@
             :class="['input', { 'is-danger': !isEmailValid }]"
             placeholder="Your email"
             type="email"
+            autocomplete="email"
             :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
 
             required
@@ -132,6 +137,7 @@
 >Cancel</RouterLink>
         </div>
     </div>
+</div>
 </div>
 </template>
 

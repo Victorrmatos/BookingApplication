@@ -15,7 +15,7 @@ import { db } from '@/js/firebase';
 const clientsCollectionRef = collection(db, 'clients');
 const clientsCollectionQuery = query(
     clientsCollectionRef,
-    orderBy('date', 'desc')
+    orderBy('lName', 'asc')
     );
     
     export const useStoreClients = defineStore('storeClients', {

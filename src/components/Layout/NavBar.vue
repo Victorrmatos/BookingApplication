@@ -36,6 +36,8 @@
         :class="{ 'is-active' : showMobileNav }"
         
       >
+
+
         <div class="navbar-end" >
           <RouterLink
             to="/"
@@ -100,6 +102,15 @@
           >
             Appearance
           </RouterLink>
+          <button
+            :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)'}"
+            class="button is-small mt-3 ml-3"
+            @click="logout()"
+            
+          >
+
+    Log out {{ storeAuth.user.email }}
+  </button>
         </div>
       </div>
     </div>
@@ -113,7 +124,15 @@
 
   import { ref, computed, watch } from 'vue'
   import { useStoreColors } from '@/stores/storeColors.js';
-  import { useRoute } from 'vue-router';
+  import { routerKey, useRoute, useRouter } from 'vue-router';
+  import { useStoreAuth } from '@/stores/storeAuth';
+
+
+    /*
+    store
+    */
+    const storeAuth = useStoreAuth()
+
 
 
 /*
@@ -131,10 +150,15 @@ if (window.innerWidth <= 1023) {
   showMobileNav.value = !showMobileNav.value
 }
 }
+const router = useRouter()
 const route = useRoute();
 const activePageName = ref('Booking App'); // Default page name
 
-
+const logout = () => {
+  storeAuth.logoutUser()
+  router.push('/')
+  
+}
 const updateActivePageName = () => {
   switch (route.path) {
     case '/': activePageName.value = 'New Booking'; break;

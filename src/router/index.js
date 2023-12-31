@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { useStoreAuth } from '@/stores/storeAuth'
 import ViewServices from '@/views/ViewServices.vue'
 import ViewEditService from '@/views/ViewEditService.vue'
 import ViewDatePicker from '@/views/ViewDatePicker.vue'
@@ -9,6 +10,7 @@ import ViewAdminDates from '@/views/ViewAdminDates.vue'
 import ViewClients from '@/views/ViewClients.vue'
 import ViewBookings from '@/views/ViewBookings.vue'
 import ViewAppearance from '@/views/ViewAppearance.vue'
+import ViewAuth from '@/views/ViewAuth.vue'
 
 
 const routes = [
@@ -62,12 +64,28 @@ const routes = [
     path: '/confirmation',
     name: 'confirmation',
     component: ViewConfirmation
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: ViewAuth
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach(async (to, from) => {
+const storeAuth = useStoreAuth()
+if (!storeAuth.user.id && to.name !== 'auth' && to.name !== 'services' && to.name !== 'date' && to.name !== 'form' && to.name !== 'confirmation'){
+ return { name: 'auth'}
+}
+if (storeAuth.user.id && to.name === 'auth'){
+  return false
+}
+
 })
 
 export default router

@@ -17,6 +17,7 @@ const servicesCollectionQuery = query(
   servicesCollectionRef,
   orderBy('date', 'desc')
 );
+let getServicesSnapshot = null
 
 export const useStoreServices = defineStore('storeServices', {
   state: () => {
@@ -27,9 +28,15 @@ export const useStoreServices = defineStore('storeServices', {
   }, // Add a comma here
 
   actions: {
+
+
     async getServices() {
+
+
         this.servicesLoaded = false
-      onSnapshot(servicesCollectionQuery, (querySnapshot) => {
+
+        if(getServicesSnapshot) getServicesSnapshot()
+     getServicesSnapshot =  onSnapshot(servicesCollectionQuery, (querySnapshot) => {
         let services = [];
         querySnapshot.forEach((doc) => {
           let service = {

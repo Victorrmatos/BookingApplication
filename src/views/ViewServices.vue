@@ -1,6 +1,8 @@
 <template>
+    <NavBar v-if="storeAuth.user.id"></NavBar>
     <StepIndicator class="step-indicator pt-5" :totalSteps="4" :currentStep="currentStep" :maxStep="maxStepReached" />
     <div class="columns">
+       
         <div class="column avatar-card is-one-third">
             <div class="box transparent-70 ml-5 mr-5" :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }">
                 <div class="card-content avatar-card-content has-text-centered">
@@ -15,7 +17,7 @@
         </div>
         <div class="column">
             <div class="content-wrapper">
-                <progress v-if="!storeServices.servicesLoaded" class="progress is-large ml-5 mr-5" max="100" :style="{ backgroundColor: 'var(--background-color)' }"></progress>
+                <progress v-if="!storeServices.servicesLoaded" style="width: 85%" class="progress is-large ml-5 mr-5" max="100" :style="{ backgroundColor: 'var(--background-color)' }"></progress>
                 <template v-else>
                     <div class="services">
                         <RouterLink to="/date">
@@ -50,8 +52,10 @@ import { useStoreServices } from '@/stores/storeServices'
 import { useStoreBookings } from '@/stores/storeBookings';
 import { useRouter } from 'vue-router';
 import StepIndicator from '@/components/Layout/StepIndicator.vue'
-import { useStoreColors } from '@/stores/storeColors.js';
+import NavBar from '@/components/Layout/NavBar.vue'
 
+import { useStoreColors } from '@/stores/storeColors.js';
+import { useStoreAuth } from '@/stores/storeAuth'
 /*
 appearance
 */
@@ -68,7 +72,7 @@ store
 */
 const storeServices = useStoreServices()
 const storeBookings = useStoreBookings()
-
+const storeAuth = useStoreAuth()
 /*
 step indicator
 */
@@ -97,7 +101,8 @@ const threeClicks = () => {
     clickCount.value++;
     
     if (clickCount.value === 3) {
-        router.push('/adminServices');
+        router.push('/auth');
+        storeAuth.init()
     }
 };
 

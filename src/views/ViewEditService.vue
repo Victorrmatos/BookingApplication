@@ -47,6 +47,13 @@ import AddEditService from '@/components/Services/AddEditService.vue'
 import { useStoreServices } from '@/stores/storeServices'
 import NavBar from '@/components/Layout/NavBar.vue'
 import { useStoreColors } from '@/stores/storeColors'
+import { useStoreAuth } from '@/stores/storeAuth'
+
+
+
+const storeAuth = useStoreAuth()
+
+
 
 /*
 router
@@ -79,6 +86,14 @@ const handleSaveClicked = () => {
     router.push('/adminServices')
 }
 
+onMounted(async()  => {
+   await storeAuth.init()
+if (!storeAuth.user.id) {
+        router.push('/');
+    }
+    else{
+        
+    }})
 </script>
 <style scoped>
 .button {

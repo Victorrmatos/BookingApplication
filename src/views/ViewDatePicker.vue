@@ -3,7 +3,9 @@
     
     <div class="columns">
       <!-- Date Picker Section -->
-      <div id="app" class="calendar column is-half mr-5">
+      <div id="app" class="calendar column is-half mr-5"    
+           :ref="state.dateSlots.length <= -1 ? 'lastSlotRef' : undefined"
+>
         <v-date-picker
         v-model="state.date"
         ref="calendar"
@@ -18,12 +20,13 @@
       </div>
       
       <!-- Time Slots Section -->
-      
-      <div class="column is-half has-text-centered">
+      <transition name="fade">
+
+      <div v-if="state.date" class="column is-half has-text-centered">
         <div class="box transparent-80 confirmation ml-5 mr-5"
         :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
         >
-        <h2 class="title is-5 ml-5 mr-5" :style="{ color: 'var(--text-color)' }">{{ state.date.toDateString() }}</h2>
+        <h2 class="title is-5 ml-5 mr-5" :style="{ color: 'var(--text-color)' }">{{ state.date ? state.date.toDateString() : ''}}</h2>
       </div>
       
       
@@ -36,8 +39,9 @@
             class=" button custom-button is-rounded has-text-centered is-dark transparent-70"
             @click="selectedDateTime(slot, index)"
             :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
-            style="border: 1px solid var(--text-color)">
-            {{ slot }}
+            style="border: 1px solid var(--text-color)"
+            :ref="index === state.dateSlots.length - 1 ? 'lastSlotRef' : undefined">
+         {{ slot }}
           </li>
         </template>
       </transition-group>
@@ -45,24 +49,29 @@
     <RouterLink to="/form">
       <div class="level">
   <div class="level-item has-text-centered">
+    <transition name="fade">
+
   <button
   v-if="state.tempSelectedSlots[0]"
   @click="confirmSelection"
   class="button ml-5 mr-5 is-large is-responsive"
   :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
-  
+  ref="confirmButtonRef"
+
   >Confirm Time</button>
+  </transition>
 </div>
 </div>
 </RouterLink>
   </div>
+  </transition>
 </div>
 
 
 </template>
 
 <script setup>
-import { onMounted, watch, reactive, computed, ref } from 'vue';
+import { onMounted, nextTick, reactive, computed, ref } from 'vue';
 import { useStoreDateTime } from '@/stores/storeDateTime';
 import { useStoreBookings } from '@/stores/storeBookings';
 import StepIndicator from '@/components/Layout/StepIndicator.vue'
@@ -106,11 +115,12 @@ const isSelected = (slot) => {
 };
 
 const formatDate = (date) => {
-  
+  if (date instanceof Date){
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
   return `${day}-${month}-${year}`;
+  }
 };
 
 const updateDateSlots = async () => {
@@ -128,9 +138,7 @@ const updateDateSlots = async () => {
 
   state.dateSlots = sortedSlots;
   
-  if (!dateObj ) {
-    console.warn(`No data found for date: ${formattedDate}`);
-  }
+ 
 }
   state.isLoading = false; // Update loading state
 };
@@ -201,10 +209,17 @@ const handleCalendarClick = () => {
   state.tempSelectedSlots =[]
   updateDateSlots();
   state.disabledDates = calculateDisabledDates();
+  nextTick(() => {
+    if (lastSlotRef.value) {
+      console.log(lastSlotRef.value)
+      lastSlotRef.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  });
 };
 
 const calculateDisabledDates = () => {
   let disabled = [];
+  if (state.date instanceof Date){
   const selectedYear = state.date.getFullYear();
   const selectedMonth = state.date.getMonth();
   
@@ -220,7 +235,10 @@ const calculateDisabledDates = () => {
   return disabled.map(date => {
     return { start: date, end: date };
   });
+}
 };
+const confirmButtonRef = ref(null);
+const lastSlotRef = ref(null);
 
 const selectedDateTime = (slot, index) => {
   const selectedSlots = [slot];
@@ -233,8 +251,13 @@ const selectedDateTime = (slot, index) => {
   storeBookings.newBooking.date=formatDate(state.date)
   storeBookings.newBooking.slots=selectedSlots
   state.tempSelectedSlots=selectedSlots
-};
-
+  nextTick(() => {
+    if (confirmButtonRef.value) {
+      confirmButtonRef.value.focus();
+      confirmButtonRef.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  })
+}
 
 
 
@@ -268,14 +291,33 @@ a, h2{
 .calendar, .step-indicator, h2 {
   user-select: none;
 }
-
-.slot-transition-enter-from {
+/* Fade Transition for Time Slots Section */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter, .fade-leave-to {
   opacity: 0;
-  transform: translateY(-30px);
 }
 
+/* Initial state for entering elements */
+.fade-enter-from {
+  opacity: 0;
+}
+
+/* Slot Transition for List Items */
 .slot-transition-enter-active {
-  transition: all 0.5s;
+  transition: all 0.5s ease;
+}
+.slot-transition-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.slot-transition-leave-active {
+  transition: all 0.5s ease;
+}
+.slot-transition-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .custom-button {

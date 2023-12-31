@@ -84,14 +84,19 @@ No services added.
 
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useStoreServices } from '@/stores/storeServices'
 import { useDateFormat } from '@vueuse/core'
 import NavBar from '@/components/Layout/NavBar.vue';
 import AddEditService from '@/components/Services/AddEditService.vue';
 import { useStoreColors } from '@/stores/storeColors'
+import { useRouter } from 'vue-router';
+import { useStoreAuth } from '@/stores/storeAuth'
+
+const router = useRouter()
 
 
+const storeAuth = useStoreAuth()
 const storeServices = useStoreServices()
 const newServiceName = ref('')
 const newServicePrice = ref('')
@@ -99,6 +104,13 @@ const newServiceDuration = ref('')
 const addEditServiceRef = ref(null)
 const storeColors = useStoreColors()
 
+
+onMounted(async()  => {
+   await storeAuth.init()
+if (!storeAuth.user.id) {
+        router.push('/');
+    }
+})
 const addService = () => {
     storeServices.addService(newServiceName.value, newServicePrice.value, newServiceDuration.value)
     newServiceName.value = ''

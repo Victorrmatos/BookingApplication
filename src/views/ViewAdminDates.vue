@@ -1,96 +1,70 @@
 <template>
-  <NavBar 
-  />
+  <NavBar />
+  
   <div @keyup.enter="saveChanges">
-    <div
-        class="box transparent-80 confirmation"
-        :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
-        >
-    <div class="columns is-mobile transparent-80">
-     
-      <div class="column has-text-centered" 
-            >
+    <div class="box transparent-80 confirmation" :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }">
+      <div class="columns is-mobile transparent-80">
+        <div class="column has-text-centered">
           <label class="label is-3 " for="selectedWeekday" :style="{ color: storeColors.textColor }">Select a weekday:</label>
           <div class="select control">
-            <select class="select is-large" id="selectedWeekday" v-model="selectedWeekday" :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"  v-autofocus>
-              <option v-for="(timeSlots, day) in storeDateTime.stdWeek" :key="day" :value="day" >
+            <select class="select is-large" id="selectedWeekday" v-model="selectedWeekday" :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }" v-autofocus>
+              <option v-for="(timeSlots, day) in storeDateTime.stdWeek" :key="day" :value="day">
                 {{ fullWeekdayNames[day] }}
               </option>
             </select>
           </div>
           <label class="label is-3 mt-5 " for="calendar" :style="{ color: storeColors.textColor }">Or select a day in the calendar:</label>
           <v-date-picker
-            class="calendar"
-            v-model="date"
-            style="width: 100%"
-            :min-date="new Date()"
-            :masks="masks"
-            :attributes="dateAttributes"
-            @click="calendarSelect" 
-            :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
-          
+          class="calendar"
+          v-model="date"
+          style="width: 100%"
+          :min-date="new Date()"
+          :masks="masks"
+          :attributes="dateAttributes"
+          @click="calendarSelect" 
+          :style="{ color: 'var(--text-color)', backgroundColor: 'var(--background-color)' }"
           />
           <div class="is-full mt-5 ">
-           
-           <transition name="fade">
-            <button v-if="displayText" class="button is-large is-responsive" @click="saveChanges" :style="{ backgroundColor: storeColors.textColor, color: storeColors.backgroundColor }" style="width: 100%" >
-              <span class="file-icon">
-                <i class="fas fa-save"></i>
-              </span > 
-              Save changes for {{ displayText }}
-            </button>
-          </transition>
+            <transition name="fade">
+              <button v-if="displayText" class="button is-large is-responsive" @click="saveChanges" :style="{ backgroundColor: storeColors.textColor, color: storeColors.backgroundColor }" style="width: 100%">
+                <span class="file-icon">
+                  <i class="fas fa-save"></i>
+                </span>
+                Save changes for {{ displayText }}
+              </button>
+            </transition>
           </div>
-        
-      </div>
-
-      <div class="column is-two-thirds has-text-centered">
-        <transition name="fade">
-
-        <div v-if="displayText">
-        <h2 class="title is-size-4  has-text-centered" :style="{ color: storeColors.textColor }">
-          Modifying Time-Slots For <span class="title "   :style="{ color: 'var(--text-color)' }">{{ displayText }}</span>
-        </h2>
-        <div class="slot-indicator ml-5">
-          <i class="fas fa-circle mr-2" :style="{ color: storeColors.textColor }"></i>
-          <h2 class="ml-5" :style="{ color: 'var(--text-color)' }">
-Slots Available for Bookings </h2>
         </div>
-        <div class="buttons-container ">
         
-          <div class="column is-half" v-for="(slot, index) in stdSlots" :key="slot" v-if="index % 2 === 0">
+        <div class="column is-two-thirds has-text-centered">
+          <transition name="fade">
+            <div v-if="displayText">
+              <h2 class="title is-size-4  has-text-centered" :style="{ color: storeColors.textColor }">
+                Modifying Time-Slots For <span class="title " :style="{ color: 'var(--text-color)' }">{{ displayText }}</span>
+              </h2>
+              <div class="slot-indicator ml-5">
+                <i class="fas fa-circle mr-2" :style="{ color: storeColors.textColor }"></i>
+                <h2 class="ml-5" :style="{ color: 'var(--text-color)' }">Slots Available for Bookings</h2>
+              </div>
+              <div class="buttons-container">
+          <div v-for="(slot, index) in stdSlots" :key="index" class="column is-half">
             <button 
-              
-              :class="['button', 'custom-button', 'is-fullwidth', 'is-rounded',{ 'is-active': isActiveSlot(slot), 'is-booked': isBookedSlot(slot) }]" 
+              :class="['button', 'custom-button', 'is-fullwidth', 'is-rounded', { 'is-active': isActiveSlot(slot), 'is-booked': isBookedSlot(slot) }]" 
               @click="toggleActiveSlot(slot)" 
-              :value="slot"
-              style=" height: 30px"
-              :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
               :disabled="isBookedSlot(slot)"
+              style="height: 30px"
+              :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
             >
-              {{ isBookedSlot(slot) ? slot + ' - Booked' : slot }}
+              {{ isBookedSlot(slot) ? 'Booked' : slot }}
             </button>
           </div>
-          <div class="column is-half" v-for="(slot, index) in stdSlots" :key="slot" v-if="index % 2 !== 0">
-            <button 
-              :class="['button', 'custom-button', 'is-fullwidth', 'is-rounded',{ 'is-active': isActiveSlot(slot), 'is-booked': isBookedSlot(slot) }]" 
-              @click="toggleActiveSlot(slot)" 
-              :value="slot"
-              style=" height: 30px"
-              :style="{ backgroundColor: storeColors.backgroundColor, color: storeColors.textColor }"
-              :disabled="isBookedSlot(slot)"
-            >
-              {{ isBookedSlot(slot) ? slot + ' - Booked' : slot }}
-            </button>
-          </div>
-      
         </div>
-      </div>
+        </div>
       </transition>
     </div>
-    </div>
-    </div>
   </div>
+</div>
+</div>
 </template>
 
 
@@ -99,7 +73,13 @@ import { provide, ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useStoreDateTime } from '@/stores/storeDateTime';
 import { useStoreBookings } from '@/stores/storeBookings';
 import { vAutofocus } from '@/directives/vAutofocus'
+import { useRouter } from 'vue-router';
+import { useStoreAuth } from '@/stores/storeAuth'
 
+const router = useRouter()
+
+
+const storeAuth = useStoreAuth()
 
 import NavBar from '@/components/Layout/NavBar.vue';
 import { useStoreColors } from '@/stores/storeColors'
@@ -177,8 +157,8 @@ const calendarSelect = () => {
   let dateObj = storeDateTime.dates.find(d => d.date === selectedDateFormatted);
   let bookings = storeBookings.bookings.filter(item => item.date === selectedDateFormatted);
   dayBookedSlots.value = bookings.map(item => item.slots).flat();
-
-
+  
+  
   if (dateObj) {
     tempActiveTimeSlots.value = [...dateObj.availableSlots];
   } else {
@@ -202,7 +182,14 @@ const weekDaySelect = () => {
 
 
 
-onMounted(() => {
+
+  onMounted(async()  => {
+   await storeAuth.init()
+if (!storeAuth.user.id) {
+        router.push('/');
+    }
+    else{
+  stdSlots.value = storeDateTime.slots.times;
   updateDateAttributes();
   const handleKeyup = (event) => {
     if (event.key === 'Enter') {
@@ -216,11 +203,11 @@ onMounted(() => {
   
   
   weekDaySelect();
-  stdSlots.value = storeDateTime.slots.times;
   
   onUnmounted(() => {
     window.removeEventListener('keyup', handleKeyup);
   });
+}
 });
 
 watch(selectedWeekday, weekDaySelect);
@@ -308,24 +295,24 @@ const updateDateAttributes = () => {
   }
   if ( date.value instanceof Date){
     const startOfMonth = new Date(date.value.getFullYear(), date.value.getMonth(), 1);
-  const endOfMonth = new Date(date.value.getFullYear(), date.value.getMonth() + 1, 0);
-  
-  for (let d = new Date(startOfMonth); d <= endOfMonth; d.setDate(d.getDate() + 1)) {
-    let formattedDate = formatDate(d);
-    let attribute = {
-      key: `day-${formattedDate}`,
-      dates: new Date(d)
-    };
-
-    if (bookingDatesSet.value.has(formattedDate)) {
-      // Add a dot for days with bookings
-      attribute.dot = {
-        backgroundColor: 'blue' // Or any color you prefer
+    const endOfMonth = new Date(date.value.getFullYear(), date.value.getMonth() + 1, 0);
+    
+    for (let d = new Date(startOfMonth); d <= endOfMonth; d.setDate(d.getDate() + 1)) {
+      let formattedDate = formatDate(d);
+      let attribute = {
+        key: `day-${formattedDate}`,
+        dates: new Date(d)
       };
+      
+      if (bookingDatesSet.value.has(formattedDate)) {
+        // Add a dot for days with bookings
+        attribute.dot = {
+          backgroundColor: 'blue' // Or any color you prefer
+        };
+      }
+      
+      attributes.push(attribute);
     }
-
-    attributes.push(attribute);
-  }
   }
   dateAttributes.value = attributes;
 };
@@ -344,7 +331,7 @@ watch(() => date.value, () => {
     weekDaySelect()
   }
   // This will trigger reactivity in the dateAttributes computed property
- 
+  
 }, { deep: true });
 
 watch(selectedWeekday, () => {
@@ -366,7 +353,6 @@ const saveChanges = async () => {
     if (dateObjIndex !== -1) {
       const customDay = storeDateTime.dates[dateObjIndex];
       try {
-        console.log(customDay.id, customDay.date, newAvailableSlots)
         await storeDateTime.updateCustomDay(customDay.id, customDay.date, newAvailableSlots);
       } catch (error) {
         console.error('Error updating custom day:', error);
@@ -399,13 +385,13 @@ const saveChanges = async () => {
 
 <style scoped>
 
-  /* Fade transition */
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-  .fade-enter-from, .fade-leave-to {
-    opacity: 0;
-  }
+/* Fade transition */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
 .buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -445,21 +431,21 @@ const saveChanges = async () => {
     flex-direction: column;
     align-items: center;
   }
-
+  
   .column {
     width: 90%;
     max-width: 90%;
     min-width:90%;
   }
-
-
+  
+  
 }
 
 @media (min-width: 1024px) {
   .column.is-one-third {
     width: 33.333%;
   }
-
+  
   .column.is-two-thirds {
     width: 66.666%;
   }

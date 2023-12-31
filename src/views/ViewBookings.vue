@@ -22,22 +22,27 @@
                     <th>ID</th>
                     <th>Date</th>
                     <th>Client Name</th>
+                    <th>Client Id</th>
                     <th>Service</th>
                     <th>Time Booked</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(booking, id) in filteredBookings" :key="id" class="booking"
-    :class="{ 'today-booking': isBookingToday(booking.date), 'old-booking': isBookingOld(booking.date) && !isBookingToday(booking.date) }">
+    :class="['booking-row-' + booking.clientId, 
+             { 'today-booking': isBookingToday(booking.date), 
+               'old-booking': isBookingOld(booking.date) && !isBookingToday(booking.date) }]">
+   
    
   
-            <td>{{ booking.id }}</td>
+            <td  class="scrollableId-cell">{{ booking.id }}</td>
                     <td>{{ booking.date }}</td>
                     <td>
-                        <router-link :to="`/clients/`">
-                            {{ getFullClientName(booking.clientId) }}
-                        </router-link>
+                        <router-link :to="{ path: '/clients/', query: { clientId: booking.clientId }}">
+  {{ getFullClientName(booking.clientId) }}
+</router-link>
                     </td>
+                    <td  class="scrollableId-cell">{{ booking.clientId }}</td>
                     <td>{{ booking.service }}</td>
                     <td>{{ formatSlots(booking.slots) }}</td>
                     <td>
@@ -64,17 +69,25 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { nextTick, onMounted , ref, computed} from 'vue';
 import { useStoreBookings } from '@/stores/storeBookings';
 import { useStoreClients } from '@/stores/storeClients'; 
+import { useStoreAuth } from '@/stores/storeAuth'
 import NavBar from '@/components/Layout/NavBar.vue';
 import { useStoreDateTime } from '@/stores/storeDateTime';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter()
+const route = useRoute();
+
+const storeAuth = useStoreAuth()
 const storeDateTime = useStoreDateTime();
 const storeBookings = useStoreBookings();
 const storeClients = useStoreClients();
 // Reactive variable for checkbox state
 const showOldBookings = ref(false);
+const clientIdFromRoute = route.query.clientId;
+
 
 // Modify the sortedBookings computed property
 const filteredBookings = computed(() => {
@@ -145,10 +158,31 @@ const getFullClientName = (clientId) => {
 
 const deleteBookingUpdateDay = (bookingId, bookingDate, bookingSlots) => {
     let date = storeDateTime.dates.find(obj => obj.date === bookingDate);
-    console.log('date', date, 'dateId', date.id);
     storeDateTime.removeBookingFromDay(date.id, bookingId, bookingSlots);
     storeBookings.deleteBooking(bookingId);
 };
+
+
+const highlightClientBookings = async () => {
+  await nextTick(); // Ensure the DOM is updated
+  const bookingRows = document.querySelectorAll(`.booking-row-${clientIdFromRoute}`);
+  bookingRows.forEach(row => {
+    row.classList.add('highlighted-booking');
+  });
+};
+
+onMounted(async()  => {
+   await storeAuth.init()
+if (!storeAuth.user.id) {
+        router.push('/');
+    }
+    else{
+  if (clientIdFromRoute) {
+    highlightClientBookings();
+  }
+}
+});
+
 </script>
 <style scoped>
 .booking {
@@ -168,5 +202,13 @@ const deleteBookingUpdateDay = (bookingId, bookingDate, bookingSlots) => {
 .is-greyed-out {
     background-color: grey; /* Grey out buttons for older bookings */
     cursor: not-allowed;
+}
+
+.highlighted-booking {
+  background-color: lightgreen !important;
+}
+.scrollableId-cell {
+    max-width: 5rem; 
+    overflow-x: auto;
 }
 </style>
